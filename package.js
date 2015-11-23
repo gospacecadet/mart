@@ -11,26 +11,42 @@ Package.describe({
 });
 
 Package.onUse(function(api) {
-  api.versionsFrom('1.2.1');
+  api.versionsFrom('METEOR@1.2.1');
 
+  // Core packages
   api.use([
     'ecmascript',
-    "underscore",
     "check"
+  ]);
+
+  // Meteor regulars
+  api.use([
+    "underscore",
+  ]);
+
+  // Community packages
+  api.use([
+    'mrgalaxy:stripe@2.2.0',
   ]);
 
   api.add_files([
     "lib/mart.js",
-    "lib/contract.js"
+    "lib/contract.js",
+    "lib/gateways/stripe.js"
   ]);
 
   api.export("Mart");
 });
 
 Package.onTest(function(api) {
-  api.use('ecmascript');
-  api.use('tinytest');
-  api.use('marvin:mart');
+  api.use([
+    'tinytest',
+    'test-helpers',
+    'marvin:mart'
+  ]);
 
-  api.addFiles('mart-tests.js');
+  api.addFiles([
+    'tests/mart-tests.js',
+    'tests/stripe-tests.js'
+  ]);
 });
