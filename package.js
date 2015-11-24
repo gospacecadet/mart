@@ -31,11 +31,18 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
+  ])
+
+  api.add_files([
     "lib/contract.js",
     "lib/gateways/stripe.js"
-  ]);
+  ], "server")
 
-  api.export("Mart");
+  api.add_files([
+    "lib/actions/account-info.js"
+  ], "client")
+
+  api.export("Mart")
 });
 
 Package.onTest(function(api) {
@@ -46,7 +53,7 @@ Package.onTest(function(api) {
   ]);
 
   api.addFiles([
-    'tests/mart-tests.js',
-    'tests/stripe-tests.js'
+    'test/contract-tests.js',
+    'test/stripe-tests.js'
   ]);
 });
