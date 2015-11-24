@@ -1,3 +1,3 @@
-Meteor based platform that create marketplaces where shoppers can buy from multiple vendors
+Meteor based platform that creates marketplaces where shoppers can buy from multiple vendors
 
 WIP

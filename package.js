@@ -2,7 +2,7 @@ Package.describe({
   name: 'marvin:mart',
   version: '0.0.1',
   // Brief, one-line summary of the package.
-  summary: 'Meteor based platform that create marketplaces where shoppers can buy from multiple vendors.',
+  summary: 'Meteor based platform that creates marketplaces where shoppers can buy from multiple vendors.',
   // URL to the Git repository containing the source code for this package.
   git: 'git@github.com:marvinmarnold/mart.git',
   // By default, Meteor will default to using README.md for documentation.
