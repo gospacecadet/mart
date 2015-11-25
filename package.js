@@ -31,15 +31,17 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
+    "lib/gateways/stripe/stripe_common.js"
   ])
 
   api.add_files([
     "lib/contract.js",
-    "lib/gateways/stripe.js"
+    "lib/gateways/stripe/stripe_server.js"
   ], "server")
 
   api.add_files([
-    "lib/actions/account-info.js"
+    "lib/actions/account-info.js",
+    "lib/gateways/stripe/stripe_client.js"
   ], "client")
 
   api.export("Mart")
@@ -48,6 +50,7 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use([
     'tinytest',
+    'underscore',
     'test-helpers',
     'marvin:mart'
   ]);
