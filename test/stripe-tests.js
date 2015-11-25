@@ -22,9 +22,8 @@ if(Meteor.isServer){
   })
 }
 if(Meteor.isClient) {
-  testAsyncMulti('Stripe - create-card', [
+  testAsyncMulti('Stripe - createCardToken', [
     function(test, expect) {
-      console.log("hwey man")
       var expected = [
         'brand', 'token', 'last4',
         'exp_month', 'exp_year'
@@ -37,16 +36,27 @@ if(Meteor.isClient) {
           // get the keys of the card response from Stripe
           // returns an array
           // test that all the keys are there
-          var respCardKeys = _.keys(response.card)//.push('token'),
-          respCardKeys.push('token')
+          var respCardKeys = _.keys(response)//.push('token'),
+
           respCardKeys = respCardKeys.sort()
           var intersection = _.intersection(respCardKeys, expected)
           var haveMinInter = _.difference(intersection, expected)
           haveMinInter = (haveMinInter.length === 0)
 
-          //TODO values should match too
-
+          // test that all the keys are there
           test.isTrue(haveMinInter)
+
+          // token is a string that starts with tok
+          response.token.match(/^tok.*/)
+
+          // brand is visa + last fours are 4242
+          test.equal(response.brand, "Visa")
+          test.equal(response.last4, "4242")
+
+          // month and year match
+          test.equal(response.exp_month, card.exp_month)
+          test.equal(response.exp_year, card.exp_year)
+
         })
       )
     },
