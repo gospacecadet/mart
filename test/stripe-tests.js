@@ -3,19 +3,12 @@ var contract = {
   secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
   name: name
 }
-var card = {
-  "number": '4242424242424242',
-  "exp_month": 12,
-  "exp_year": 2016,
-  "cvc": '123'
-}
 
 if(Meteor.isServer){
   Tinytest.add('Stripe - retrieve-account-info', function (test) {
     Mart.createContract(contract.name, Mart.Stripe)
 
     var expected = {
-        processorName: "Stripe",
         businessName: "SpaceCadet Fleet, Inc",
         businessURL: "spacecadet.io",
         detailsSubmitted: true,
@@ -26,16 +19,22 @@ if(Meteor.isServer){
     var info = Mart.Stripe.retrieveAccountInfo(contract)
     test.equal(info, expected)
 
-    var contracts = Mart.Contracts.find({
-      name: name,
-      type: "Stripe"
-    })
+    expected["processorName"] = "Stripe"
+    expected["name"] = contract.name
+    var contracts = Mart.Contracts.find(expected)
     test.isTrue(contracts.count() === 1)
   })
 }
 if(Meteor.isClient) {
   testAsyncMulti('Stripe - createCardToken', [
     function(test, expect) {
+      var card = {
+        "number": '4242424242424242',
+        "exp_month": 12,
+        "exp_year": 2016,
+        "cvc": '123'
+      }
+
       var expected = [
         'brand', 'token', 'last4',
         'exp_month', 'exp_year'
