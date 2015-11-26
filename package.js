@@ -17,7 +17,8 @@ Package.onUse(function(api) {
   api.use([
     'ecmascript',
     "check",
-    'mongo'
+    'mongo',
+    'accounts-password'
   ]);
 
   // Meteor regulars
@@ -29,7 +30,8 @@ Package.onUse(function(api) {
   api.use([
     'mrgalaxy:stripe@2.2.0',
     'aldeed:collection2@2.5.0',
-    'aldeed:simple-schema@1.3.3'
+    'aldeed:simple-schema@1.3.3',
+    'ongoworks:security@1.1.0'
   ]);
 
   api.add_files([
@@ -40,7 +42,8 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/contract.js",
-    "lib/gateways/stripe/stripe_server.js"
+    "lib/gateways/stripe/stripe_server.js",
+    'lib/merchants/merchants_server.js'
   ], "server")
 
   api.add_files([
