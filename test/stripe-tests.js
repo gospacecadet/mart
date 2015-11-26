@@ -1,4 +1,7 @@
-var contract = {secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe"}
+var contract = {
+  secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
+  name: 'alibaba'
+}
 var card = {
   "number": '4242424242424242',
   "exp_month": 12,
@@ -8,6 +11,8 @@ var card = {
 
 if(Meteor.isServer){
   Tinytest.add('Stripe - retrieve-account-info', function (test) {
+    Mart.createContract(contract.name, Mart.Stripe)
+
     var expected = {
         processorName: "Stripe",
         businessName: "SpaceCadet Fleet, Inc",
@@ -19,6 +24,9 @@ if(Meteor.isServer){
 
     var info = Mart.Stripe.retrieveAccountInfo(contract)
     test.equal(info, expected)
+
+    var contracts = Mart.Contracts.find({name: contract.name})
+    test.isTrue(contracts.count() === 1)
   })
 }
 if(Meteor.isClient) {
@@ -32,7 +40,7 @@ if(Meteor.isClient) {
       Mart.Stripe.createCardToken(contract, card,
         // test that all the keys are there
         expect(function(err, response) {
-          console.log(response)
+          // console.log(response)
           // get the keys of the card response from Stripe
           // returns an array
           // test that all the keys are there

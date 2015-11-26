@@ -16,7 +16,8 @@ Package.onUse(function(api) {
   // Core packages
   api.use([
     'ecmascript',
-    "check"
+    "check",
+    'mongo'
   ]);
 
   // Meteor regulars
