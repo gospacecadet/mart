@@ -1,6 +1,7 @@
+var name = 'alibaba' + new Date().getTime()
 var contract = {
   secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
-  name: 'alibaba'
+  name: name
 }
 var card = {
   "number": '4242424242424242',
@@ -25,7 +26,10 @@ if(Meteor.isServer){
     var info = Mart.Stripe.retrieveAccountInfo(contract)
     test.equal(info, expected)
 
-    var contracts = Mart.Contracts.find({name: contract.name})
+    var contracts = Mart.Contracts.find({
+      name: name,
+      type: "Stripe"
+    })
     test.isTrue(contracts.count() === 1)
   })
 }
