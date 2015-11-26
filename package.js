@@ -28,11 +28,14 @@ Package.onUse(function(api) {
   // Community packages
   api.use([
     'mrgalaxy:stripe@2.2.0',
+    'aldeed:collection2@2.5.0',
+    'aldeed:simple-schema@1.3.3'
   ]);
 
   api.add_files([
     "lib/mart.js",
-    "lib/gateways/stripe/stripe_common.js"
+    "lib/gateways/stripe/stripe_common.js",
+    'lib/merchants/merchants.js'
   ])
 
   api.add_files([
@@ -58,6 +61,7 @@ Package.onTest(function(api) {
 
   api.addFiles([
     'test/contract-tests.js',
-    'test/stripe-tests.js'
+    'test/stripe-tests.js',
+    'test/merchant-tests.js'
   ]);
 });
