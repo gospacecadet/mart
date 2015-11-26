@@ -1,11 +1,11 @@
-var name = 'alibaba' + new Date().getTime()
-var contract = {
-  secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
-  name: name
-}
-
 if(Meteor.isServer){
   Tinytest.add('Stripe - retrieve-account-info', function (test) {
+    var name = 'alibaba' + new Date().getTime()
+    var contract = {
+      secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
+      name: name
+    }
+
     Mart.createContract(contract.name, Mart.Stripe)
 
     var expected = {
@@ -28,6 +28,12 @@ if(Meteor.isServer){
 if(Meteor.isClient) {
   testAsyncMulti('Stripe - createCardToken', [
     function(test, expect) {
+      var name = 'alibaba' + new Date().getTime()
+      var contract = {
+        secretKey: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
+        name: name
+      }
+      
       var card = {
         "number": '4242424242424242',
         "exp_month": 12,
