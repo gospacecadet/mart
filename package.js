@@ -15,10 +15,8 @@ Package.onUse(function(api) {
 
   // Core packages
   api.use([
-    'ecmascript',
-    "check",
-    'mongo',
-    'accounts-password'
+    'ecmascript', "check", 'mongo', 'accounts-password',
+    'blaze-html-templates'
   ]);
 
   // Meteor regulars
@@ -37,18 +35,25 @@ Package.onUse(function(api) {
   api.add_files([
     "lib/mart.js",
     "lib/gateways/stripe/stripe_common.js",
-    'lib/storefronts/storefronts.js'
+    'lib/storefronts/storefronts.js',
+    'lib/products/products.js',
+    'lib/line-items/line-items.js',
+    'lib/carts/carts.js',
   ])
 
   api.add_files([
     "lib/contract.js",
     "lib/gateways/stripe/stripe_server.js",
-    'lib/storefronts/storefronts_server.js'
+    'lib/storefronts/storefronts_server.js',
+    'lib/products/products_server.js',
+    'lib/line-items/line-items-server.js',
+    'lib/carts/carts_server.js'
   ], "server")
 
   api.add_files([
     "lib/actions/account-info.js",
-    "lib/gateways/stripe/stripe_client.js"
+    "lib/gateways/stripe/stripe_client.js",
+    'lib/carts/carts_client.js'
   ], "client")
 
   api.export("Mart")
