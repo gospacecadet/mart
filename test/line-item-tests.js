@@ -18,6 +18,15 @@ if(Meteor.isServer) {
     isActive: true
   })
 
+  Tinytest.add('LineItem - remove', function (test) {
+    var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
+    var li = Mart.LineItems.findOne(lid)
+
+    Mart.LineItem.remove(lid)
+
+    test.isUndefined(Mart.LineItems.findOne(lid))
+  })
+
   Tinytest.add('LineItems - sets CreatedAt', function (test) {
     var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
     var li = Mart.LineItems.findOne(lid)
