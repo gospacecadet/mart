@@ -61,15 +61,14 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use([
-    'tinytest',
-    'underscore',
-    'test-helpers',
-    'marvin:mart'
+    'tinytest', 'underscore',
+    'test-helpers', 'marvin:mart'
   ]);
 
   api.addFiles([
     'test/contract-tests.js',
     'test/stripe-tests.js',
-    'test/storefront-tests.js'
+    'test/storefront-tests.js',
+    'test/line-item-tests.js'
   ]);
 });
