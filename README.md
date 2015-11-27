@@ -52,3 +52,7 @@ Mart.Stripe.setPublishableKey("pk_test_cUA2GkVEAZpwSRZk3DilRcTR")
 #### Mart.LineItem
 
 -	Mart.LineItem.**subtotal**(lineItemId): return the subtotal for a specific Line Item
+
+#### Mart.Cart
+
+-	Mart.Cart.**subtotal**(cartId): return the subtotal for a specific cart

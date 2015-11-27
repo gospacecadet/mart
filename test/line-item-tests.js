@@ -18,6 +18,14 @@ if(Meteor.isServer) {
     isActive: true
   })
 
+  Tinytest.add('LineItems - sets CreatedAt', function (test) {
+    var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
+    var li = Mart.LineItems.findOne(lid)
+    var now = new Date().getTime()
+    test.isTrue(li.createdAt > now - 10)
+    test.isTrue(li.createdAt < now + 10)
+  })
+
   Tinytest.add('LineItems - add product/shop attributes onCreate', function (test) {
     var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
     var li = Mart.LineItems.findOne(lid)
