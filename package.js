@@ -37,13 +37,13 @@ Package.onUse(function(api) {
   api.add_files([
     "lib/mart.js",
     "lib/gateways/stripe/stripe_common.js",
-    'lib/merchants/merchants.js'
+    'lib/storefronts/storefronts.js'
   ])
 
   api.add_files([
     "lib/contract.js",
     "lib/gateways/stripe/stripe_server.js",
-    'lib/merchants/merchants_server.js'
+    'lib/storefronts/storefronts_server.js'
   ], "server")
 
   api.add_files([
@@ -65,6 +65,6 @@ Package.onTest(function(api) {
   api.addFiles([
     'test/contract-tests.js',
     'test/stripe-tests.js',
-    'test/merchant-tests.js'
+    'test/storefront-tests.js'
   ]);
 });
