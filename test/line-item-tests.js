@@ -30,4 +30,10 @@ if(Meteor.isServer) {
     test.equal(li.productName, "test product")
     test.equal(li.storefrontName, "Test Storefront")
   })
+
+  Tinytest.add('LineItems - has a subtotal', function (test) {
+    var lid = Mart.LineItems.insert({productId: productId, quantity: 3, cartId: cartId})
+
+    test.equal(Mart.LineItem.subtotal(lid), 5.23 * 3)
+  })
 }

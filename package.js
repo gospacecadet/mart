@@ -15,7 +15,10 @@ Package.onUse(function(api) {
 
   // Core packages
   api.use([
-    'ecmascript', "check", 'mongo', 'accounts-password',
+    'ecmascript',
+    "check",
+    'mongo',
+    'accounts-password',
     'blaze-html-templates'
   ]);
 
@@ -69,6 +72,7 @@ Package.onTest(function(api) {
     'test/contract-tests.js',
     'test/stripe-tests.js',
     'test/storefront-tests.js',
-    'test/line-item-tests.js'
+    'test/line-item-tests.js',
+    'test/cart-tests.js'
   ]);
 });
