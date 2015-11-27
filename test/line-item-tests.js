@@ -17,7 +17,6 @@ if(Meteor.isServer) {
     storefrontId: storefrontId,
     isActive: true
   })
-  var product = Mart.Products.findOne(productId)
 
   Tinytest.add('LineItems - add product/shop attributes onCreate', function (test) {
     var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
