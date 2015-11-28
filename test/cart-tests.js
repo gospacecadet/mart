@@ -39,3 +39,31 @@ if(Meteor.isServer) {
     test.equal(Mart.Cart.subtotal(cartId), 5.23*3 + 42*1098.92)
   })
 }
+
+// Can't test without login
+// if(Meteor.isClient) {
+//   testAsyncMulti('Carts - update contact info', [
+//     function(test, expect) {
+//       var cartId = Mart.Carts.insert({userId: "testId"}, {validate: false}) // can't login users easily
+//       Mart.Carts.update(cartId, {$set: {
+//         state: "failure",
+//         userId: "failure",
+//         contactName: "contactName",
+//         contactEmail: "contactEmail",
+//         contactPhone: "contactPhone",
+//         contactEntity: "contactEntity",
+//       }}, expect(function(err, response) {
+//         if(err)
+//           return test.isTrue(false, "Encountered error when trying to update: " + err.message)
+//
+//         var cart = Mart.Carts.findOne(cartId)
+//         test.equal(cart.state, "contactName")
+//         test.equal(cart.userId, "testId")
+//         test.equal(cart.contactName, "contactName")
+//         test.equal(cart.contactEmail, "contactEmail")
+//         test.equal(cart.contactPhone, "contactPhone")
+//         test.equal(cart.contactEntity, "contactEntity")
+//       }))
+//     }
+//   ])
+// }

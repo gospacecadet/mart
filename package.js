@@ -31,8 +31,8 @@ Package.onUse(function(api) {
   api.use([
     'mrgalaxy:stripe@2.2.0',
     'aldeed:collection2@2.5.0',
-    'aldeed:simple-schema@1.3.3',
-    'ongoworks:security@1.1.0'
+    'aldeed:simple-schema@1.4.0',
+    'ongoworks:security@1.3.0'
   ]);
 
   api.add_files([
