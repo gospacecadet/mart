@@ -37,26 +37,29 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
-    "lib/gateways/stripe/stripe_common.js",
-    'lib/storefronts/storefronts.js',
-    'lib/products/products.js',
-    'lib/line-items/line-items.js',
-    'lib/carts/carts.js',
+    "lib/gateways/gateway.js",
+    'lib/gateways/test/test.js'
+    // "lib/gateways/stripe/stripe.js",
+    // 'lib/storefronts/storefronts.js',
+    // 'lib/products/products.js',
+    // 'lib/line-items/line-items.js',
+    // 'lib/carts/carts.js',
   ])
 
   api.add_files([
-    "lib/contract.js",
-    "lib/gateways/stripe/stripe_server.js",
-    'lib/storefronts/storefronts_server.js',
-    'lib/products/products_server.js',
-    'lib/line-items/line-items-server.js',
-    'lib/carts/carts_server.js'
+    "lib/gateways/gateway_server.js"
+    // "lib/contract.js",
+    // "lib/gateways/stripe/stripe_server.js",
+    // 'lib/storefronts/storefronts_server.js',
+    // 'lib/products/products_server.js',
+    // 'lib/line-items/line-items-server.js',
+    // 'lib/carts/carts_server.js'
   ], "server")
 
   api.add_files([
-    "lib/actions/account-info.js",
-    "lib/gateways/stripe/stripe_client.js",
-    'lib/carts/carts_client.js'
+    // "lib/actions/account-info.js",
+    // "lib/gateways/stripe/stripe_client.js",
+    // 'lib/carts/carts_client.js'
   ], "client")
 
   api.export("Mart")
@@ -69,10 +72,11 @@ Package.onTest(function(api) {
   ]);
 
   api.addFiles([
-    'test/contract-tests.js',
-    'test/stripe-tests.js',
-    'test/storefront-tests.js',
-    'test/line-item-tests.js',
-    'test/cart-tests.js'
+    'test/gateways/gateway-tests.js'
+    // 'test/contract-tests.js',
+    // 'test/stripe-tests.js',
+    // 'test/storefront-tests.js',
+    // 'test/line-item-tests.js',
+    // 'test/cart-tests.js'
   ]);
 });
