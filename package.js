@@ -18,6 +18,7 @@ Package.onUse(function(api) {
     'ecmascript',
     "check",
     'mongo',
+    'accounts-base',
     'accounts-password',
     'blaze-html-templates'
   ]);
@@ -38,7 +39,8 @@ Package.onUse(function(api) {
   api.add_files([
     "lib/mart.js",
     "lib/gateways/gateway.js",
-    'lib/gateways/test/test.js'
+    'lib/gateways/test/test.js',
+    'lib/payment_methods/cards/cards.js'
     // "lib/gateways/stripe/stripe.js",
     // 'lib/storefronts/storefronts.js',
     // 'lib/products/products.js',
@@ -47,7 +49,8 @@ Package.onUse(function(api) {
   ])
 
   api.add_files([
-    "lib/gateways/gateway_server.js"
+    "lib/gateways/gateway_server.js",
+    "lib/payment_methods/cards/cards_server.js"
     // "lib/contract.js",
     // "lib/gateways/stripe/stripe_server.js",
     // 'lib/storefronts/storefronts_server.js',
@@ -57,6 +60,8 @@ Package.onUse(function(api) {
   ], "server")
 
   api.add_files([
+    "lib/payment_methods/cards/cards_client.js",
+    "lib/gateways/test/test_client.js"
     // "lib/actions/account-info.js",
     // "lib/gateways/stripe/stripe_client.js",
     // 'lib/carts/carts_client.js'
@@ -67,13 +72,16 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use([
-    'tinytest', 'underscore',
-    'test-helpers', 'marvin:mart'
+    'tinytest', 'underscore', 'random',
+    'test-helpers', 'marvin:mart',
+    'accounts-base', 'accounts-password'
   ]);
 
   api.addFiles([
     'test/gateways/gateway-tests.js',
-    'test/gateways/test-gateway-tests.js'
+    // 'test/gateways/test-gateway-tests.js',
+    'test/card-tests.js'
+
     // 'test/contract-tests.js',
     // 'test/stripe-tests.js',
     // 'test/storefront-tests.js',
