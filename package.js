@@ -78,12 +78,13 @@ Package.onTest(function(api) {
   ]);
 
   api.addFiles([
+    'test/helpers.js',
     'test/gateways/gateway-tests.js',
     'test/gateways/test-gateway-tests.js',
-    'test/card-tests.js'
+    'test/card-tests.js',
 
     // 'test/contract-tests.js',
-    // 'test/stripe-tests.js',
+    // 'test/gateways/stripe-tests.js',
     // 'test/storefront-tests.js',
     // 'test/line-item-tests.js',
     // 'test/cart-tests.js'

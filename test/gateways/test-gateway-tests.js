@@ -25,22 +25,13 @@ var card = {
   cvc: 123,
   number: 4242424242424242
 }
+
 if(Meteor.isClient) {
   Tinytest.addAsync('GatewayTypes::Test - create-card', function(test, done) {
-    var username1 = 'testuser1-' + Random.id();
-    var password1 = 'password1-' + Random.id();
-    loginAsUser1();
-
-    function loginAsUser1() {
-      Accounts.createUser({
-        username: username1,
-        password: password1
-      }, onUser1LoggedIn);
-    }
+    loginWCallback(test, onUser1LoggedIn)
 
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
-
       Mart.Card.createCard(Mart.GatewayTypes.Test, card, function(err, cardId) {
         test.isUndefined(err, 'Unexpected error CREATING CARD');
         Meteor.subscribe('cards', onCardsReady)
