@@ -79,7 +79,7 @@ Package.onTest(function(api) {
 
   api.addFiles([
     'test/gateways/gateway-tests.js',
-    // 'test/gateways/test-gateway-tests.js',
+    'test/gateways/test-gateway-tests.js',
     'test/card-tests.js'
 
     // 'test/contract-tests.js',
