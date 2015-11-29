@@ -20,36 +20,35 @@ Tinytest.addAsync('Gateways::Test - update-gateway-info', function(test, done) {
   })
 })
 
-//
-// var card = {
-//   nameOnCard: "Marvin Arnold",
-//   expMonth: 10,
-//   expYear: 2019,
-//   cvc: 123,
-//   number: 4242424242424242
-// }
-//
-// if(Meteor.isClient) {
-//   Tinytest.addAsync('Gateways::Test - create-card', function(test, done) {
-//     loginWCallback(test, onUser1LoggedIn)
-//
-//     function onUser1LoggedIn(err) {
-//       test.isUndefined(err, 'Unexpected error logging in as user1');
-//       Mart.Card.createCard(Mart.Gateways.Test, card, function(err, cardId) {
-//         test.isUndefined(err, 'Unexpected error CREATING CARD');
-//         Meteor.subscribe('cards', onCardsReady)
-//       })
-//     }
-//
-//     function onCardsReady() {
-//       test.equal(Mart.Cards.find().count(), 1)
-//       var expectedCard = Mart.Cards.findOne()
-//       test.equal(expectedCard.last4, 4242)
-//       test.equal(expectedCard.expMonth, 10)
-//       test.equal(expectedCard.expYear, 2019)
-//       test.equal(expectedCard.nameOnCard, "Marvin Arnold")
-//       test.equal(expectedCard.brand, "Visa")
-//       done();
-//     }
-//   })
-// }
+var card = {
+  nameOnCard: "Marvin Arnold",
+  expMonth: 10,
+  expYear: 2019,
+  cvc: 123,
+  number: 4242424242424242
+}
+
+if(Meteor.isClient) {
+  Tinytest.addAsync('Gateways::Test - create-card', function(test, done) {
+    loginWCallback(test, onUser1LoggedIn)
+
+    function onUser1LoggedIn(err) {
+      test.isUndefined(err, 'Unexpected error logging in as user1');
+      Mart.Card.createCard("Test", card, function(err, cardId) {
+        test.isUndefined(err, 'Unexpected error CREATING CARD');
+        Meteor.subscribe('mart/cards', onCardsReady)
+      })
+    }
+
+    function onCardsReady() {
+      test.equal(Mart.Cards.find().count(), 1)
+      var expectedCard = Mart.Cards.findOne()
+      test.equal(expectedCard.last4, 4242)
+      test.equal(expectedCard.expMonth, 10)
+      test.equal(expectedCard.expYear, 2019)
+      test.equal(expectedCard.nameOnCard, "Marvin Arnold")
+      test.equal(expectedCard.brand, "Visa")
+      done();
+    }
+  })
+}

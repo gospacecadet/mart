@@ -41,7 +41,7 @@ Package.onUse(function(api) {
     'lib/gateways/gateways.js',
     'lib/gateways/test/test.js',
     'lib/payment_methods/cards/cards.js',
-    // "lib/gateways/stripe/stripe.js",
+    "lib/gateways/stripe/stripe.js",
     // 'lib/storefronts/storefronts.js',
     // 'lib/products/products.js',
     // 'lib/line-items/line-items.js',
@@ -51,8 +51,7 @@ Package.onUse(function(api) {
   api.add_files([
     "lib/payment_methods/cards/cards_server.js",
     'lib/gateways/gateways_server.js',
-    // "lib/contract.js",
-    // "lib/gateways/stripe/stripe_server.js",
+    "lib/gateways/stripe/stripe_server.js",
     // 'lib/storefronts/storefronts_server.js',
     // 'lib/products/products_server.js',
     // 'lib/line-items/line-items-server.js',
@@ -62,8 +61,7 @@ Package.onUse(function(api) {
   api.add_files([
     "lib/payment_methods/cards/cards_client.js",
     "lib/gateways/test/test_client.js",
-    // "lib/actions/account-info.js",
-    // "lib/gateways/stripe/stripe_client.js",
+    "lib/gateways/stripe/stripe_client.js",
     // 'lib/carts/carts_client.js'
   ], "client")
 
@@ -81,8 +79,7 @@ Package.onTest(function(api) {
     'test/helpers.js',
     'test/gateways/test-tests.js',
     'test/card-tests.js',
-    // 'test/contract-tests.js',
-    // 'test/gateways/stripe-tests.js',
+    'test/gateways/stripe-tests.js',
     // 'test/storefront-tests.js',
     // 'test/line-item-tests.js',
     // 'test/cart-tests.js'
