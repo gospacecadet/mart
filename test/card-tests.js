@@ -3,28 +3,20 @@ var card = {
   expMonth: 11,
   expYear: 2019,
   nameOnCard: "Marvin Arnold",
-  brand: "Visa"
+  brand: "Visa",
+  gatewayToken: "testToken"
 }
 
 if (Meteor.isClient) {
   Tinytest.addAsync('Card - subscribe', function(test, done) {
-    var username1 = 'testuser1-' + Random.id();
-    var password1 = 'password1-' + Random.id();
-    loginAsUser1();
-
-    function loginAsUser1() {
-      Accounts.createUser({
-        username: username1,
-        password: password1
-      }, onUser1LoggedIn);
-    }
+    loginWCallback(test, onUser1LoggedIn)
 
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
 
       Mart.Cards.insert(card, function(error, cardId) {
         test.isUndefined(error, 'Unexpected error inserting card');
-        Meteor.subscribe('cards', onCardsReady)
+        Meteor.subscribe('mart/cards', onCardsReady)
       })
     }
 

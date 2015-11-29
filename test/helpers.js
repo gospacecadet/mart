@@ -1,5 +1,4 @@
 loginWCallback = function(test, callback) {
-  console.log("loginWCallback");
   var username1 = 'testuser1-' + Random.id();
   var password1 = 'password1-' + Random.id();
   Accounts.createUser({
