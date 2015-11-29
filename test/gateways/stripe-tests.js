@@ -44,43 +44,44 @@ Tinytest.addAsync('Gateways::Stripe - update-gateway-info', function(test, done)
   })
 })
 
-// var card = {
-//   nameOnCard: "Marvin Arnold",
-//   expMonth: 10,
-//   expYear: 2019,
-//   cvc: 123,
-//   number: 4242424242424242
-// }
-//
-// if(Meteor.isClient) {
-//   Tinytest.addAsync('Gateways::Stripe - create-card', function(test, done) {
-//     loginWCallback(test, onUser1LoggedIn)
-//
-//     function onUser1LoggedIn(err) {
-//       console.log("MonUser1LoggedIn");
-//       test.isUndefined(err, 'Unexpected error logging in as user1');
-//       Mart.Card.createCard("Stripe", card, {
-//         publicKey: keys.public,
-//         secretKey: keys.secret,
-//       }, function(err, cardId) {
-//         console.log("McreateCard " + cardId);
-//         test.isUndefined(err, 'Unexpected error CREATING CARD:');
-//         Meteor.subscribe('mart/cards', onCardsReady)
-//       })
-//     }
-//
-//     function onCardsReady() {
-//       console.log("MonCardsReady");
-//       test.equal(Mart.Cards.find().count(), 1)
-//       // var expectedCard = Mart.Cards.findOne()
-//       // test.equal(expectedCard.last4, 4242)
-//       // test.equal(expectedCard.expMonth, 10)
-//       // test.equal(expectedCard.expYear, 2019)
-//       // test.equal(expectedCard.nameOnCard, "Marvin Arnold")
-//       // test.equal(expectedCard.brand, "Visa")
-//
-//       // should have created a customer
-//       done();
-//     }
-//   })
-// }
+var card = {
+  nameOnCard: "Marvin Arnold",
+  expMonth: 10,
+  expYear: 2019,
+  cvc: 123,
+  number: 4242424242424242
+}
+
+if(Meteor.isClient) {
+  Tinytest.addAsync('Gateways::Stripe - create-card', function(test, done) {
+    loginWCallback(test, onUser1LoggedIn)
+
+    function onUser1LoggedIn(err) {
+      test.isUndefined(err, 'Unexpected error logging in as user1');
+      Mart.Card.createCard("Stripe", card, {
+        publicKey: keys.public,
+        secretKey: keys.secret,
+      }, function(err, cardId) {
+        test.isUndefined(err, 'Unexpected error CREATING CARD:');
+        Meteor.subscribe('mart/cards', onCardsReady)
+      })
+    }
+
+    function onCardsReady() {
+      test.equal(Mart.Cards.find().count(), 1)
+      var expectedCard = Mart.Cards.findOne()
+      test.equal(expectedCard.last4, 4242)
+      test.equal(expectedCard.expMonth, 10)
+      test.equal(expectedCard.expYear, 2019)
+      test.equal(expectedCard.nameOnCard, "Marvin Arnold")
+      test.equal(expectedCard.brand, "Visa")
+
+      // TODO test that customer created
+      // customers is server side only collection so hard to see
+      // Stripe does not provide test tokens, so can't bypass
+      // client and only test server methods
+
+      done();
+    }
+  })
+}
