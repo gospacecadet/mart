@@ -9,6 +9,7 @@ Tinytest.addAsync('Gateways::Test - update-gateway-info', function(test, done) {
       Meteor.subscribe('mart/gateways', checkGateway)
 
     function checkGateway() {
+
       gateway = Mart.Gateways.findOne()
       test.equal(gateway.businessName, "Test Gateway Business Name")
       test.equal(gateway.businessURL, "example.com")
@@ -34,7 +35,7 @@ if(Meteor.isClient) {
 
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
-      Mart.Card.createCard("Test", card, function(err, cardId) {
+      Mart.Card.createCard("Test", card, {}, function(err, cardId) {
         test.isUndefined(err, 'Unexpected error CREATING CARD');
         Meteor.subscribe('mart/cards', onCardsReady)
       })
@@ -48,6 +49,7 @@ if(Meteor.isClient) {
       test.equal(expectedCard.expYear, 2019)
       test.equal(expectedCard.nameOnCard, "Marvin Arnold")
       test.equal(expectedCard.brand, "Visa")
+      test.equal(expectedCard.gateway, "Test")
       done();
     }
   })

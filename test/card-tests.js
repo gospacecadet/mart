@@ -4,7 +4,8 @@ var card = {
   expYear: 2019,
   nameOnCard: "Marvin Arnold",
   brand: "Visa",
-  gatewayToken: "testToken"
+  gatewayToken: "testToken",
+  gateway: "Test"
 }
 
 if (Meteor.isClient) {
@@ -28,6 +29,8 @@ if (Meteor.isClient) {
       test.equal(expectedCard.expYear, 2019)
       test.equal(expectedCard.nameOnCard, "Marvin Arnold")
       test.equal(expectedCard.brand, "Visa")
+      test.equal(expectedCard.gatewayToken, "testToken")
+      test.equal(expectedCard.gateway, "Test")
       done();
     }
   })
