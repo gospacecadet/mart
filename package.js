@@ -1,6 +1,6 @@
 Package.describe({
   name: 'marvin:mart',
-  version: '0.0.1',
+  version: '0.0.2',
   // Brief, one-line summary of the package.
   summary: 'Meteor based platform that creates marketplaces where shoppers can buy from multiple vendors.',
   // URL to the Git repository containing the source code for this package.
