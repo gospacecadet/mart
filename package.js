@@ -42,27 +42,27 @@ Package.onUse(function(api) {
     'lib/gateways/test/test.js',
     'lib/payment_methods/cards/cards.js',
     "lib/gateways/stripe/stripe.js",
-    // 'lib/storefronts/storefronts.js',
-    // 'lib/products/products.js',
-    // 'lib/line-items/line-items.js',
-    // 'lib/carts/carts.js',
+    'lib/storefronts/storefronts.js',
+    'lib/products/products.js',
+    'lib/line_items/line_items.js',
+    'lib/carts/carts.js',
   ])
 
   api.add_files([
     "lib/payment_methods/cards/cards_server.js",
     'lib/gateways/gateways_server.js',
     "lib/gateways/stripe/stripe_server.js",
-    // 'lib/storefronts/storefronts_server.js',
-    // 'lib/products/products_server.js',
-    // 'lib/line-items/line-items-server.js',
-    // 'lib/carts/carts_server.js'
+    'lib/storefronts/storefronts_server.js',
+    'lib/products/products_server.js',
+    'lib/line_items/line_items_server.js',
+    'lib/carts/carts_server.js'
   ], "server")
 
   api.add_files([
     "lib/payment_methods/cards/cards_client.js",
     "lib/gateways/test/test_client.js",
     "lib/gateways/stripe/stripe_client.js",
-    // 'lib/carts/carts_client.js'
+    'lib/carts/carts_client.js'
   ], "client")
 
   api.export("Mart")
@@ -80,8 +80,8 @@ Package.onTest(function(api) {
     'test/gateways/test-tests.js',
     'test/card-tests.js',
     'test/gateways/stripe-tests.js',
-    // 'test/storefront-tests.js',
-    // 'test/line-item-tests.js',
-    // 'test/cart-tests.js'
+    'test/storefront-tests.js',
+    'test/line-item-tests.js',
+    'test/cart-tests.js'
   ]);
 });
