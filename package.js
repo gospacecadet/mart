@@ -34,6 +34,7 @@ Package.onUse(function(api) {
     'aldeed:collection2@2.5.0',
     'aldeed:simple-schema@1.4.0',
     'ongoworks:security@1.3.0',
+    'momentjs:moment@2.10.6'
   ]);
 
   api.add_files([
