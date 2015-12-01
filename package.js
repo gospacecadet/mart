@@ -72,7 +72,7 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use([
-    'tinytest', 'underscore', 'random',
+    'tinytest', 'ecmascript', 'underscore', 'random',
     'test-helpers', 'marvin:mart',
     'accounts-base', 'accounts-password',
   ]);
