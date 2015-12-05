@@ -54,7 +54,8 @@ Package.onUse(function(api) {
   ])
 
   api.add_files([
-    'lib/storefront/storefronts-publications.js', 'lib/storefront/storefronts-security.js',
+    'lib/storefront/server/storefronts-publications.js',
+    'lib/storefront/server/storefronts-security.js',
     // "lib/payment_methods/cards/cards_server.js",
     // 'lib/gateways/gateways_server.js',
     // "lib/gateways/stripe/stripe_server.js",
