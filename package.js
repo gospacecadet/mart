@@ -18,6 +18,7 @@ Package.onUse(function(api) {
     'ecmascript',
     "check",
     'mongo',
+    'meteor-base', 'accounts-password', 'accounts-base',
     'accounts-base',
     'accounts-password',
     'blaze-html-templates',
@@ -35,6 +36,7 @@ Package.onUse(function(api) {
     'aldeed:simple-schema@1.4.0',
     'ongoworks:security@1.3.0',
     'momentjs:moment@2.10.6',
+    'alanning:roles@1.2.14'
     // 'matb33:collection-hooks@0.7.5',
   ]);
 
@@ -75,8 +77,13 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use([
     'tinytest', 'ecmascript', 'underscore', 'random',
+    'meteor-base', 'accounts-password', 'accounts-base',
     'test-helpers', 'marvin:mart', 'accounts-base', 'accounts-password',
   ]);
+
+  api.use([
+    'alanning:roles@1.2.14'
+  ])
 
   api.addFiles([
     'test/helpers.js',
@@ -91,7 +98,7 @@ Package.onTest(function(api) {
     // 'test/gateways/test-tests.js',
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
-    'test/storefront/storefront-client-tests.js',
+    'test/storefront/storefronts-publications-tests.js',
     // 'test/line-item-tests.js',
     // 'test/cart-tests.js'
   ], "client");
