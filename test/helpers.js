@@ -4,8 +4,15 @@ loginWCallback = function(test, callback) {
   Accounts.createUser({
     username: username1,
     password: password1
-  }, function(err) {
-    test.isUndefined(err, 'Unexpected error logging in as user1');
-    callback(err)
+  }, function(error) {
+    test.isUndefined(error, 'Unexpected error logging in as user');
+    callback(error)
+  });
+}
+
+logoutWCallback = function(test, callback) {
+  Meteor.logout(function(error){
+    test.isUndefined(error, 'Unexpected error logging out as user');
+    callback(error)
   });
 }

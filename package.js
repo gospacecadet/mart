@@ -40,31 +40,33 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
-    'lib/gateways/gateways.js',
-    'lib/gateways/test/test.js',
-    'lib/payment_methods/cards/cards.js',
-    "lib/gateways/stripe/stripe.js",
-    'lib/storefronts/storefronts.js',
-    'lib/products/products.js',
-    'lib/line_items/line_items.js',
-    'lib/carts/carts.js',
+    'lib/storefront/storefront.js', 'lib/storefront/storefronts.js',
+    // 'lib/gateways/gateways.js',
+    // 'lib/gateways/test/test.js',
+    // 'lib/payment_methods/cards/cards.js',
+    // "lib/gateways/stripe/stripe.js",
+    // 'lib/storefronts/storefronts.js',
+    // 'lib/products/products.js',
+    // 'lib/line_items/line_items.js',
+    // 'lib/carts/carts.js',
   ])
 
   api.add_files([
-    "lib/payment_methods/cards/cards_server.js",
-    'lib/gateways/gateways_server.js',
-    "lib/gateways/stripe/stripe_server.js",
-    'lib/storefronts/storefronts_server.js',
-    'lib/products/products_server.js',
-    'lib/line_items/line_items_server.js',
-    'lib/carts/carts_server.js'
+    'lib/storefront/storefronts-publications.js', 'lib/storefront/storefronts-security.js',
+    // "lib/payment_methods/cards/cards_server.js",
+    // 'lib/gateways/gateways_server.js',
+    // "lib/gateways/stripe/stripe_server.js",
+    // 'lib/storefronts/storefronts_server.js',
+    // 'lib/products/products_server.js',
+    // 'lib/line_items/line_items_server.js',
+    // 'lib/carts/carts_server.js'
   ], "server")
 
   api.add_files([
-    "lib/payment_methods/cards/cards_client.js",
-    "lib/gateways/test/test_client.js",
-    "lib/gateways/stripe/stripe_client.js",
-    'lib/carts/carts_client.js'
+    // "lib/payment_methods/cards/cards_client.js",
+    // "lib/gateways/test/test_client.js",
+    // "lib/gateways/stripe/stripe_client.js",
+    // 'lib/carts/carts_client.js'
   ], "client")
 
   api.export("Mart")
@@ -73,17 +75,24 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use([
     'tinytest', 'ecmascript', 'underscore', 'random',
-    'test-helpers', 'marvin:mart',
-    'accounts-base', 'accounts-password',
+    'test-helpers', 'marvin:mart', 'accounts-base', 'accounts-password',
   ]);
 
   api.addFiles([
     'test/helpers.js',
-    'test/gateways/test-tests.js',
-    'test/card-tests.js',
-    'test/gateways/stripe-tests.js',
-    'test/storefront-tests.js',
-    'test/line-item-tests.js',
-    'test/cart-tests.js'
+    // 'test/gateways/test-tests.js',
+    // 'test/card-tests.js',
+    // 'test/gateways/stripe-tests.js',
+    // 'test/line-item-tests.js',
+    // 'test/cart-tests.js'
   ]);
+
+  api.addFiles([
+    // 'test/gateways/test-tests.js',
+    // 'test/card-tests.js',
+    // 'test/gateways/stripe-tests.js',
+    'test/storefront/storefront-client-tests.js',
+    // 'test/line-item-tests.js',
+    // 'test/cart-tests.js'
+  ], "client");
 });
