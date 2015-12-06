@@ -47,6 +47,13 @@ Mart.Stripe.setPublishableKey("pk_test_cUA2GkVEAZpwSRZk3DilRcTR")
 	-	CONTRACT_NAME: String
 	-	GATEWAY_TYPE: Mart.Stripe currently the only option
 
+#### Mart.Storefront
+##### Publications
+
+- **mart/storefronts** - Public fields* for all published, non-deleted Storefronts.
+- **mart/storefronts** - If Admin, returns all. If Merchant, all that are not deleted. If Rep, all that are not deleted. Otherwise none.
+
+\* public fields = [name, description]
 #### Mart.Stripe
 
 -	Mart.Stripe.**setPublishableKey**(PUBLISHABLE_KEY): sets the PUBLISHABLE_KEY for Stripe
