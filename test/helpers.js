@@ -45,13 +45,13 @@ createTestStorefront = function(test, callback) {
         name: "some Storefront",
         description: "woot there it is",
         isPublished: true,
-        userId: "hacker"
+        isDeleted: false
       }, function(error, storefrontId) {
         testLogout(test, function(error) {
           test.isUndefined(error, "Could not create test storefront")
           test.isTrue(typeof storefrontId === "string")
           test.isTrue(typeof merchantId === "string")
-        //
+
           callback(error, {storefrontId: storefrontId, merchantId: merchantId})
         })
       })

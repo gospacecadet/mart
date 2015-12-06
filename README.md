@@ -15,6 +15,9 @@ Assumes using FlowRouter
 Usage
 -----
 
+See a live demo [here](http://betaspacecadetio-55593.onmodulus.net/), OR
+see the source [here](https://github.com/marvinmarnold/beta.spacecadet.io/)
+
 ### Add a Stripe account
 
 In `server/stripe.js`:

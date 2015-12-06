@@ -10,7 +10,7 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefronts no user require
     name: "some Storefront",
     description: "woot there it is",
     isPublished: true,
-    userId: "hacker"
+    isDeleted: false
   }
   var insertedStoreId
 
@@ -36,7 +36,6 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Merchant] can s
     name: "some Storefront",
     description: "woot there it is",
     isPublished: false,
-    userId: "hacker"
   }
   var insertedStoreId
 
@@ -81,7 +80,6 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Admin] can subs
     description: "woot there it is",
     isPublished: false,
     isDeleted: true,
-    userId: "hacker"
   }
   let insertedStoreId
   let merchantId
@@ -131,7 +129,7 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Rep] can subscr
     name: "some Storefront",
     description: "woot there it is",
     isPublished: false,
-    userId: "hacker"
+    userId: "testId"
   }
   var insertedStoreId
 
