@@ -51,7 +51,7 @@ createTestStorefront = function(test, callback) {
           test.isUndefined(error, "Could not create test storefront")
           test.isTrue(typeof storefrontId === "string")
           test.isTrue(typeof merchantId === "string")
-
+        //
           callback(error, {storefrontId: storefrontId, merchantId: merchantId})
         })
       })

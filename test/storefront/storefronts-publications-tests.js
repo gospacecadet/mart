@@ -14,21 +14,10 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefronts no user require
   }
   var insertedStoreId
 
-  testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, onUserLoggedIn)
+  createTestStorefront(test, onLoggedOut)
 
-  function onUserLoggedIn(error, merchantId) {
-    Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
-  }
-
-  function onStorefrontInserted(error, storefrontId) {
-    test.isUndefined(error, "Could not insert a new Storefront")
-    test.isTrue(typeof storefrontId === "string")
-
-    insertedStoreId = storefrontId
-    testLogout(test, onLoggedOut)
-  }
-
-  function onLoggedOut(error) {
+  function onLoggedOut(error, response) {
+    insertedStoreId = response.storefrontId
     Meteor.subscribe("mart/storefronts", insertedStoreId, function() {
       let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
       test.isNotUndefined(createdStorefront)

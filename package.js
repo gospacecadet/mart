@@ -41,6 +41,7 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
+    'lib/security-helpers.js',
     'lib/storefront/storefront.js', 'lib/storefront/storefronts.js',
     // 'lib/gateways/gateways.js',
     // 'lib/gateways/test/test.js',
