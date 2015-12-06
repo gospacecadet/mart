@@ -18,7 +18,6 @@ Package.onUse(function(api) {
     'ecmascript',
     "check",
     'mongo',
-    'meteor-base', 'accounts-password', 'accounts-base',
     'accounts-base',
     'accounts-password',
     'blaze-html-templates',
@@ -78,7 +77,6 @@ Package.onUse(function(api) {
 Package.onTest(function(api) {
   api.use([
     'tinytest', 'ecmascript', 'underscore', 'random',
-    'meteor-base', 'accounts-password', 'accounts-base',
     'test-helpers', 'marvin:mart', 'accounts-base', 'accounts-password',
   ]);
 
@@ -100,6 +98,7 @@ Package.onTest(function(api) {
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
     'test/storefront/storefronts-publications-tests.js',
+    'test/storefront/storefronts-security-tests.js'
     // 'test/line-item-tests.js',
     // 'test/cart-tests.js'
   ], "client");
