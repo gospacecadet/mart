@@ -39,6 +39,10 @@ Package.onUse(function(api) {
     // 'matb33:collection-hooks@0.7.5',
   ]);
 
+  api.use([
+    'blueimp:javascript-load-image@1.13.1'
+  ], 'client')
+
   api.add_files([
     "lib/mart.js",
     'lib/security-helpers.js',
@@ -66,7 +70,7 @@ Package.onUse(function(api) {
   ], "server")
 
   api.add_files([
-    // "lib/payment_methods/cards/cards_client.js",
+    "lib/image-resize/image-resize.js",
     // "lib/gateways/test/test_client.js",
     // "lib/gateways/stripe/stripe_client.js",
     // 'lib/carts/carts_client.js'
@@ -99,7 +103,8 @@ Package.onTest(function(api) {
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
     'test/storefront/storefronts-publications-tests.js',
-    'test/storefront/storefronts-security-tests.js'
+    'test/storefront/storefronts-security-tests.js',
+    'test/image-resize-tests.js',
     // 'test/line-item-tests.js',
     // 'test/cart-tests.js'
   ], "client");
