@@ -1,4 +1,8 @@
-Tinytest.addAsync('ImageResize - Resize', function(test, done) {
+// Tinytest.addAsync('Image - Upload', function(test, done) {
+//
+// })
+
+Tinytest.addAsync('Image - Resize', function(test, done) {
   var img, blob
 
   function imgRetrieved(error) {
@@ -35,7 +39,7 @@ Tinytest.addAsync('ImageResize - Resize', function(test, done) {
   xmlHttp.send();
 })
 
-Tinytest.addAsync('ImageResize - Compress', function(test, done) {
+Tinytest.addAsync('Image - Compress', function(test, done) {
   var originalSize, newSize, img, resizedImg
 
   function imgRetrieved(error) {

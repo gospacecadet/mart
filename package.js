@@ -21,6 +21,7 @@ Package.onUse(function(api) {
     'accounts-base',
     'accounts-password',
     'blaze-html-templates',
+    'random'
   ]);
 
   // Meteor regulars
@@ -35,7 +36,7 @@ Package.onUse(function(api) {
     'aldeed:simple-schema@1.4.0',
     'ongoworks:security@1.3.0',
     'momentjs:moment@2.10.6',
-    'alanning:roles@1.2.14'
+    'alanning:roles@1.2.14',
     // 'matb33:collection-hooks@0.7.5',
   ]);
 
@@ -45,8 +46,10 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
+    'lib/accounts.js',
     'lib/security-helpers.js',
     'lib/storefront/storefront.js', 'lib/storefront/storefronts.js',
+    "lib/images/images.js",
     // 'lib/gateways/gateways.js',
     // 'lib/gateways/test/test.js',
     // 'lib/payment_methods/cards/cards.js',
@@ -70,13 +73,14 @@ Package.onUse(function(api) {
   ], "server")
 
   api.add_files([
-    "lib/image-resize/image-resize.js",
+    'lib/images/images-client.js'
     // "lib/gateways/test/test_client.js",
     // "lib/gateways/stripe/stripe_client.js",
     // 'lib/carts/carts_client.js'
   ], "client")
 
   api.export("Mart")
+  api.imply('edgee:slingshot@0.7.1')
 });
 
 Package.onTest(function(api) {
@@ -102,9 +106,10 @@ Package.onTest(function(api) {
     // 'test/gateways/test-tests.js',
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
+    'test/accounts-tests.js',
     'test/storefront/storefronts-publications-tests.js',
     'test/storefront/storefronts-security-tests.js',
-    'test/image-resize-tests.js',
+    'test/images/image-tests.js',
     // 'test/line-item-tests.js',
     // 'test/cart-tests.js'
   ], "client");
