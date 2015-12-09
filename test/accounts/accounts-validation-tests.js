@@ -1,18 +1,18 @@
-  // anybody not logged in can create a shopper or merchant
+// anybody not logged in can create a shopper or merchant
 _.each([
   Mart.ROLES.GLOBAL.SHOPPER,
   Mart.ROLES.GLOBAL.MERCHANT
 ], function(role) {
   var shopper = {
-    profile: {roles: [role]},
+    roles: [role],
     email: Random.id() + "@" + Random.id() + ".com",
     password: 'swefsadfasdfsad',
   }
 
-  Tinytest.addAsync('Accounts - Create ' + role + " not logged in", function(test, done) {
+  Tinytest.addAsync('Accounts - Validation - Create ' + role + " when not logged in", function(test, done) {
     testLogout(test, createUser)
     function createUser() {
-      Accounts.createUser(shopper, function(error) {
+      Mart.Accounts.createUser(shopper, function(error) {
         test.isUndefined(error)
         test.isNotUndefined(Meteor.userId())
         Accounts.createUser(shopper, function(error) {
@@ -30,15 +30,15 @@ _.each([
   Mart.ROLES.GLOBAL.REP
 ], function(role) {
   var shopper = {
-    profile: {roles: [role]},
+    roles: [role],
     email: Random.id() + "@" + Random.id() + ".com",
     password: 'swefsadfasdfsad',
   }
 
-  Tinytest.addAsync('Accounts - Create ' + role + " not logged in", function(test, done) {
+  Tinytest.addAsync('Accounts - Validation - Create ' + role + " when not logged in", function(test, done) {
     testLogout(test, createUser)
     function createUser() {
-      Accounts.createUser(shopper, function(error) {
+      Mart.Accounts.createUser(shopper, function(error) {
         test.isNotUndefined(error)
         done()
       })

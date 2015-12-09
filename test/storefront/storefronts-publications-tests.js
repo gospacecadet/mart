@@ -38,8 +38,11 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Merchant] can s
     isPublished: false,
   }
   var insertedStoreId
+  testLogout(test, begin)
 
-  testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onUserLoggedIn)
+  function begin() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onUserLoggedIn)
+  }
 
   function onUserLoggedIn(error) {
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
@@ -83,8 +86,11 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Admin] can subs
   }
   let insertedStoreId
   let merchantId
+  testLogout(test, begin)
 
-  testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onUserLoggedIn)
+  function begin() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onUserLoggedIn)
+  }
 
   function onUserLoggedIn(error, userId) {
     merchantId = userId
@@ -132,8 +138,11 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Rep] can subscr
     userId: "testId"
   }
   var insertedStoreId
+  testLogout(test, begin)
 
-  testLogin([Mart.ROLES.GLOBAL.REP], test, onUserLoggedIn)
+  function begin() {
+    testLogin([Mart.ROLES.GLOBAL.REP], test, onUserLoggedIn)
+  }
 
   function onUserLoggedIn(error) {
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)

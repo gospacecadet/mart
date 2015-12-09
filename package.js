@@ -46,7 +46,7 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
-    'lib/accounts.js',
+    'lib/accounts/accounts.js',
     'lib/security-helpers.js',
     'lib/storefront/storefront.js', 'lib/storefront/storefronts.js',
     "lib/images/images.js",
@@ -63,6 +63,7 @@ Package.onUse(function(api) {
   api.add_files([
     'lib/storefront/server/storefronts-publications.js',
     'lib/storefront/server/storefronts-security.js',
+    'lib/accounts/accounts-server.js'
     // "lib/payment_methods/cards/cards_server.js",
     // 'lib/gateways/gateways_server.js',
     // "lib/gateways/stripe/stripe_server.js",
@@ -106,7 +107,8 @@ Package.onTest(function(api) {
     // 'test/gateways/test-tests.js',
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
-    'test/accounts-tests.js',
+    'test/accounts/accounts-validation-tests.js',
+    'test/accounts/accounts-creation-tests.js',
     'test/storefront/storefronts-publications-tests.js',
     'test/storefront/storefronts-security-tests.js',
     'test/images/image-tests.js',

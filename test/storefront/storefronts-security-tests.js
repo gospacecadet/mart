@@ -14,11 +14,16 @@ Tinytest.addAsync('Storefronts - Security - Visitors cannot CUD Storefronts', fu
     userId: "hacker"
   }
   let createdStorefrontId
+  testLogout(test, begin)
 
-  Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInsertedVisitor)
-
+  function begin() {
+    Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInsertedVisitor)
+  }
+  
   // Visitors can't create
   function onStorefrontInsertedVisitor(error, response) {
+    console.log(error);
+    console.log(response);
     test.isNotUndefined(error)
     test.isFalse(response)
     // done()
@@ -97,7 +102,11 @@ Tinytest.addAsync('Storefronts - Security - [Rep] can only [insert, update] only
   let merchantId, expectedStorefront, storefrontId
   let roles = [Mart.ROLES.GLOBAL.REP]
 
-  testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onMerchantLoggedIn)
+  testLogout(test, begin)
+
+  function begin() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onMerchantLoggedIn)
+  }
 
   function onMerchantLoggedIn(error) {
     merchantId = Meteor.userId()
@@ -172,7 +181,11 @@ Tinytest.addAsync('Storefronts - Security - [Admin] can only [insert, update] on
   let merchantId, expectedStorefront, storefrontId
   let roles = [Mart.ROLES.GLOBAL.ADMIN]
 
-  testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onMerchantLoggedIn)
+  testLogout(test, begin)
+
+  function begin() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onMerchantLoggedIn)
+  }
 
   function onMerchantLoggedIn(error) {
     merchantId = Meteor.userId()
@@ -247,7 +260,11 @@ Tinytest.addAsync('Storefronts - Security - [Merchant] can only [insert, update]
   let merchantId, expectedStorefront, storefrontId
   let roles = [Mart.ROLES.GLOBAL.MERCHANT]
 
-  testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onMerchantLoggedIn)
+  testLogout(test, begin)
+
+  function begin() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onMerchantLoggedIn)
+  }
 
   function onMerchantLoggedIn(error) {
     merchantId = Meteor.userId()
