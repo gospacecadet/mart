@@ -1,6 +1,7 @@
 //Storefronts
   // Publications
     // - mart/storefronts no user required to subscribe to published Storefronts
+    // - mart/storefront no user required to subscribe to a published Storefront
     // - mart/storefront [Merchant] can subscribe to their owned & undeleted Storefronts
     // - mart/storefront [Admin] can subscribe to all Storefronts
     // - mart/storefront [Rep] can subscribe to all their managed Storefronts
@@ -18,14 +19,47 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefronts no user require
 
   function onLoggedOut(error, response) {
     insertedStoreId = response.storefrontId
-    Meteor.subscribe("mart/storefronts", insertedStoreId, function() {
+    var sub = Meteor.subscribe("mart/storefronts", function() {
       let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
       test.isNotUndefined(createdStorefront)
-      test.equal(createdStorefront.name, expectedStorefront.name)
-      test.equal(createdStorefront.description, expectedStorefront.description)
+      test.equal(createdStorefront.name, "some Storefront")
+      test.equal(createdStorefront.description, "woot there it is")
       test.isUndefined(createdStorefront.isPublished)
       test.isUndefined(createdStorefront.userId)
 
+      sub.stop()
+      done()
+    })
+  }
+})
+
+Tinytest.addAsync('Storefronts - Publications - mart/storefront no user required to subscribe to a published Storefront', function(test, done) {
+  var expectedStorefront = {
+    name: "some Storefront",
+    description: "woot there it is",
+    isPublished: true,
+    isDeleted: false
+  }
+  var insertedStoreId
+
+  testLogout(test, begin)
+
+  function begin() {
+    createTestStorefront(test, onLoggedOut)
+  }
+
+  function onLoggedOut(error, response) {
+    insertedStoreId = response.storefrontId
+    var sub = Meteor.subscribe("mart/storefront", insertedStoreId, function() {
+      console.log(Meteor.user() + " " + Mart.Storefronts.find().count());
+      let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
+      test.isNotUndefined(createdStorefront)
+      test.equal(createdStorefront.name, "some Storefront")
+      test.equal(createdStorefront.description, "woot there it is")
+      test.isUndefined(createdStorefront.isPublished)
+      test.isUndefined(createdStorefront.userId)
+
+      sub.stop()
       done()
     })
   }

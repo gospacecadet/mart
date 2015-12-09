@@ -31,8 +31,8 @@ if(Meteor.isServer) {
     var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
     var li = Mart.LineItems.findOne(lid)
     var now = new Date().getTime()
-    test.isTrue(li.createdAt > now - 10)
-    test.isTrue(li.createdAt < now + 10)
+    test.isTrue(li.createdAt > now - 100)
+    test.isTrue(li.createdAt < now + 100)
   })
 
   Tinytest.add('LineItems - add product/shop attributes onCreate', function (test) {
