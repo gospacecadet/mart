@@ -40,8 +40,12 @@ if(Meteor.isServer) {
   })
 }
 
-// 1 - Create card that doesnt belong to user
-var badCardId = Mart.Cards.insert({}, {validate: false})
+
+if(Meteor.isServer) {
+  // 1 - Create card that doesnt belong to user
+  var badCardId = Mart.Cards.insert({}, {validate: false})
+}
+
 if(Meteor.isClient){
   Tinytest.addAsync('Cart - successful checkout', function(test, done) {
     var originalCart, goodCardId,
@@ -53,13 +57,17 @@ if(Meteor.isClient){
           state: Mart.Cart.STATES.AWAITING_PAYMENT
         }
 
-    // 2 - Login user
-    loginWCallback(test, onUserLoggedIn)
+    testLogout(test, begin)
+    function begin() {
+      // 2 - Login user
+      testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, onUserLoggedIn)
+    }
 
     // 3 - Create default cart
     function onUserLoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in');
-      Meteor.call('mart/cart/findCurrentOrCreate', onCartCreated)
+      done()
+      // Meteor.call('mart/cart/findCurrentOrCreate', onCartCreated)
     }
 
     // 4 - Subscribe to default cart
