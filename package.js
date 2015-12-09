@@ -41,8 +41,13 @@ Package.onUse(function(api) {
   ]);
 
   api.use([
-    'blueimp:javascript-load-image@1.13.1'
+    'blueimp:javascript-load-image@1.13.1',
   ], 'client')
+
+  api.imply([
+    'edgee:slingshot@0.7.1',
+    'alanning:roles@1.2.14',
+  ])
 
   api.add_files([
     "lib/mart.js",
@@ -82,7 +87,6 @@ Package.onUse(function(api) {
   ], "client")
 
   api.export("Mart")
-  api.imply('edgee:slingshot@0.7.1')
 });
 
 Package.onTest(function(api) {

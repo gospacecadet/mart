@@ -19,11 +19,9 @@ Tinytest.addAsync('Storefronts - Security - Visitors cannot CUD Storefronts', fu
   function begin() {
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInsertedVisitor)
   }
-  
+
   // Visitors can't create
   function onStorefrontInsertedVisitor(error, response) {
-    console.log(error);
-    console.log(response);
     test.isNotUndefined(error)
     test.isFalse(response)
     // done()
