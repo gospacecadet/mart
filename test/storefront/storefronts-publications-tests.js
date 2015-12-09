@@ -67,7 +67,6 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Merchant] can s
   }
 
   function onLoggedOut(error) {
-    // done()
     Meteor.subscribe("mart/storefront", insertedStoreId, function() {
       let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
       test.isUndefined(createdStorefront)

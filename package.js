@@ -74,7 +74,8 @@ Package.onUse(function(api) {
   ], "server")
 
   api.add_files([
-    'lib/images/images-client.js'
+    'lib/images/images-client.js',
+    'lib/accounts/accounts-client.js'
     // "lib/gateways/test/test_client.js",
     // "lib/gateways/stripe/stripe_client.js",
     // 'lib/carts/carts_client.js'

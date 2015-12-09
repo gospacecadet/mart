@@ -41,11 +41,8 @@ Mart.Stripe.setPublishableKey("pk_test_cUA2GkVEAZpwSRZk3DilRcTR")
 
 ### API
 
-#### Mart
-
--	Mart.**createContract**(CONTRACT_NAME, GATEWAY_TYPE): creates a new contract (payment processor)
-	-	CONTRACT_NAME: String
-	-	GATEWAY_TYPE: Mart.Stripe currently the only option
+#### Mart.Accounts
+Must use Mart.Accounts.createUser in order to create with roles. This means that accounts-ui packages will not work.
 
 #### Mart.Storefront
 ##### Publications
