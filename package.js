@@ -44,16 +44,11 @@ Package.onUse(function(api) {
     'blueimp:javascript-load-image@1.13.1',
   ], 'client')
 
-  api.imply([
-    'edgee:slingshot@0.7.1',
-    'alanning:roles@1.2.14',
-  ])
-
   api.add_files([
     "lib/mart.js",
     'lib/accounts/accounts.js',
     'lib/security-helpers.js',
-    'lib/storefront/storefront.js', 'lib/storefront/storefronts.js',
+    'lib/storefront/storefronts.js',
     "lib/images/images.js",
     // 'lib/gateways/gateways.js',
     // 'lib/gateways/test/test.js',
@@ -69,9 +64,10 @@ Package.onUse(function(api) {
     'lib/storefront/server/storefronts-security.js',
     'lib/accounts/accounts-server.js',
     "lib/payment_methods/cards/cards_server.js",
+    'lib/products/products-publications.js',
+    'lib/products/products-security.js',
     // 'lib/gateways/gateways_server.js',
     // "lib/gateways/stripe/stripe_server.js",
-    'lib/products/products_server.js',
     'lib/line_items/line_items_server.js',
     'lib/carts/carts_server.js'
   ], "server")
@@ -83,6 +79,12 @@ Package.onUse(function(api) {
     // "lib/gateways/stripe/stripe_client.js",
     'lib/carts/carts_client.js'
   ], "client")
+
+  api.imply([
+    'edgee:slingshot@0.7.1',
+    'alanning:roles@1.2.14',
+    'ongoworks:security@1.3.0',
+  ])
 
   api.export("Mart")
 });
@@ -115,5 +117,6 @@ Package.onTest(function(api) {
     'test/storefront/storefronts-publications-tests.js',
     'test/storefront/storefronts-security-tests.js',
     'test/images/image-tests.js',
+    'test/products/products-security-tests.js'
   ], "client");
 });

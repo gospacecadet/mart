@@ -50,6 +50,33 @@ Tinytest.addAsync('Storefronts - Security - Visitors cannot CUD Storefronts', fu
   }
 })
 
+// TODO Security package currently only available on Server
+// beware, client methods are stubbed and return true
+// Tinytest.addAsync('Storefronts - Security - Visitors know they cannot update Storefronts', function(test, done) {
+//   let expectedStorefront = {
+//     name: "some Storefront",
+//     description: "woot there it is",
+//     isPublished: true,
+//     userId: "hacker"
+//   }
+//
+//   let createdStorefrontId
+//   testLogout(test, begin)
+//
+//   function begin() {
+//     createTestStorefront(test, onStorefrontInsertedMerchant)
+//   }
+//
+//   function onStorefrontInsertedMerchant(error, response) {
+//     createdStorefrontId = response.storefrontId
+//     var canUpdate = Security.can(Meteor.userId())
+//       .update(createdStorefrontId, {}).for(Mart.Storefronts).check();
+//
+//     test.isFalse(canUpdate)
+//     done()
+//   }
+// })
+
 Tinytest.addAsync('Storefronts - Security - Shoppers cannot CUD Storefronts', function(test, done) {
   let expectedStorefront = {
     name: "some Storefront",

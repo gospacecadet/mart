@@ -15,7 +15,7 @@ if(Meteor.isServer) {
     description: "a test description",
     unitPrice: 5.23,
     storefrontId: storefrontId,
-    isActive: true
+    isPublished: true
   })
 
   Tinytest.add('LineItem - remove', function (test) {
