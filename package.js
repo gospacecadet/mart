@@ -22,7 +22,8 @@ Package.onUse(function(api) {
     'accounts-password',
     'blaze-html-templates',
     'random',
-    'amplify'
+    'amplify',
+    'tracker'
   ]);
 
   // Meteor regulars
