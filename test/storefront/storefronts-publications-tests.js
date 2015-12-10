@@ -17,9 +17,10 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefronts no user require
 
   createTestStorefront(test, onLoggedOut)
 
+  var sub1
   function onLoggedOut(error, response) {
     insertedStoreId = response.storefrontId
-    Meteor.subscribe("mart/storefronts", function() {
+    sub1 = Meteor.subscribe("mart/storefronts", function() {
       let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
       test.isNotUndefined(createdStorefront)
       test.equal(createdStorefront.name, "some Storefront")
@@ -27,8 +28,8 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefronts no user require
       test.isUndefined(createdStorefront.isPublished)
       test.isUndefined(createdStorefront.userId)
 
+      sub1.stop()
       done()
-      // sub.stop()
     })
   }
 })

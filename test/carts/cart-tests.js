@@ -70,10 +70,11 @@ if(Meteor.isClient){
       // Meteor.call('mart/cart/findCurrentOrCreate', onCartCreated)
     }
 
+    var sub4
     // 4 - Subscribe to default cart
     function onCartCreated(error, result) {
       test.isUndefined(error, 'Could not create default cart');
-      Meteor.subscribe("mart/carts", [
+      sub4 = Meteor.subscribe("mart/carts", [
         Mart.Cart.STATES.SHOPPING,
         Mart.Cart.STATES.AWAITING_PAYMENT
       ], guestId(), onCartReady);
@@ -141,6 +142,8 @@ if(Meteor.isClient){
     function onNextCartCreated(error, result) {
       var finalCart = Mart.Carts.findOne({state: Mart.Cart.STATES.SHOPPING})
       test.isFalse(finalCart._id === originalCart._id)
+
+      sub4.stop()
       done();
     }
   })

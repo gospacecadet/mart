@@ -6,6 +6,7 @@ Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) 
 
   testLogout(test, createProduct)
 
+  var sub1
   function createProduct() {
     testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function() {
       Mart.Storefronts.insert({
@@ -14,7 +15,7 @@ Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) 
         isPublished: true,
       }, function(error, sId) {
         storefrontId = sId
-        Meteor.subscribe("mart/storefront", storefrontId, function() {
+        sub1 = Meteor.subscribe("mart/storefront", storefrontId, function() {
           Mart.Products.insert({
             storefrontId: storefrontId,
             name: "asd;skdf sdf",
@@ -30,15 +31,14 @@ Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) 
     })
   }
 
+  var sub2
   function begin() {
     testLogout(test, function() {
       // Login as shopper
       testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, function() {
         // Create current cart
         Meteor.call('mart/cart/findCurrentOrCreate', function(error, result) {
-          console.log(Meteor.userId());
-          Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], null, function() {
-console.log(Mart.Carts.find().count());
+          sub2 = Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], null, function() {
             cartId = Mart.Cart.currentCartId()
             doTest()
           });
@@ -55,6 +55,8 @@ console.log(Mart.Carts.find().count());
     }, function(error, response) {
       test.isUndefined(error)
 
+      sub1.stop()
+      sub2.stop()
       done()
     })
   }

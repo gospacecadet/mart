@@ -158,12 +158,13 @@ Tinytest.addAsync('Storefronts - Security - [Rep] can only [insert, update] only
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
   }
 
+  var sub1
   function onStorefrontInserted(error, storeId) {
     storefrontId = storeId
     test.isUndefined(error, "Could not create test storefront")
     test.isTrue(typeof storefrontId === "string")
 
-    Meteor.subscribe("mart/storefront", storefrontId, onStorefrontSubscribed)
+    sub1 = Meteor.subscribe("mart/storefront", storefrontId, onStorefrontSubscribed)
   }
 
   let changedStorefront = {
@@ -198,6 +199,7 @@ Tinytest.addAsync('Storefronts - Security - [Rep] can only [insert, update] only
   function onStorefrontRemoved(error, response) {
     test.isNotUndefined(error)
 
+    sub1.stop()
     done()
   }
 })
@@ -238,12 +240,13 @@ Tinytest.addAsync('Storefronts - Security - [Admin] can only [insert, update] on
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
   }
 
+  var sub1
   function onStorefrontInserted(error, storeId) {
     storefrontId = storeId
     test.isUndefined(error, "Could not create test storefront")
     test.isTrue(typeof storefrontId === "string")
 
-    Meteor.subscribe("mart/storefront", storefrontId, onStorefrontSubscribed)
+    sub1 = Meteor.subscribe("mart/storefront", storefrontId, onStorefrontSubscribed)
   }
 
   let changedStorefront = {
@@ -277,6 +280,7 @@ Tinytest.addAsync('Storefronts - Security - [Admin] can only [insert, update] on
   function onStorefrontRemoved(error, response) {
     test.isNotUndefined(error)
 
+    sub1.stop()
     done()
   }
 })
@@ -315,12 +319,13 @@ Tinytest.addAsync('Storefronts - Security - [Merchant] can only [insert, update]
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
   }
 
+  var sub1
   function onStorefrontInserted(error, storeId) {
     storefrontId = storeId
     test.isUndefined(error, "Could not create test storefront")
     test.isTrue(typeof storefrontId === "string")
 
-    Meteor.subscribe("mart/storefront", storefrontId, onStorefrontSubscribed)
+    sub1 = Meteor.subscribe("mart/storefront", storefrontId, onStorefrontSubscribed)
   }
 
   let changedStorefront = {
@@ -355,6 +360,7 @@ Tinytest.addAsync('Storefronts - Security - [Merchant] can only [insert, update]
   function onStorefrontRemoved(error, response) {
     test.isNotUndefined(error)
 
+    sub1.stop()
     done()
   }
 })

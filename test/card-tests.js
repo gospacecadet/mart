@@ -12,12 +12,13 @@ if (Meteor.isClient) {
   Tinytest.addAsync('Card - subscribe', function(test, done) {
     loginWCallback(test, onUser1LoggedIn)
 
+    var sub1
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
 
       Mart.Cards.insert(card, function(error, cardId) {
         test.isUndefined(error, 'Unexpected error inserting card');
-        Meteor.subscribe('mart/cards', onCardsReady)
+        sub1 = Meteor.subscribe('mart/cards', onCardsReady)
       })
     }
 
@@ -31,6 +32,8 @@ if (Meteor.isClient) {
       test.equal(expectedCard.brand, "Visa")
       test.equal(expectedCard.gatewayToken, "testToken")
       test.equal(expectedCard.gateway, "Test")
+
+      sub1.stop()
       done();
     }
   })

@@ -32,10 +32,11 @@ Tinytest.addAsync('Products - Security - [Merchant] can [insert, update]', funct
     }, onProductInserted)
   }
 
+  var sub1
   function onProductInserted(error, response) {
     productId = response
     test.isUndefined(error)
-    Meteor.subscribe('mart/storefront', storefrontId, function() {
+    sub1 = Meteor.subscribe('mart/storefront', storefrontId, function() {
       var product = Mart.Products.findOne(productId)
       test.equal(product.storefrontId, storefrontId)
       test.equal(product.name, "asd;skdf sdf")
@@ -48,14 +49,17 @@ Tinytest.addAsync('Products - Security - [Merchant] can [insert, update]', funct
     })
   }
 
+  var sub2
   function onUpdate(error, response) {
-    Meteor.subscribe('mart/storefront', storefrontId, function() {
+    sub2 = Meteor.subscribe('mart/storefront', storefrontId, function() {
       var product = Mart.Products.findOne(productId)
       test.equal(product.name, "hotness")
 
       Mart.Products.remove(productId, function(error, response) {
         test.isNotUndefined(error) // should not be allowed to delete
 
+        sub1.stop()
+        sub2.stop()
         done()
       })
     })
@@ -93,10 +97,11 @@ Tinytest.addAsync('Products - Security - [' + role + '] can [insert, update]', f
     }, onProductInserted)
   }
 
+  var sub1
   function onProductInserted(error, response) {
     productId = response
     test.isUndefined(error)
-    Meteor.subscribe('mart/storefront', storefrontId, function() {
+    sub1 = Meteor.subscribe('mart/storefront', storefrontId, function() {
       var product = Mart.Products.findOne(productId)
       test.equal(product.storefrontId, storefrontId)
       test.equal(product.name, "asd;skdf sdf")
@@ -109,11 +114,14 @@ Tinytest.addAsync('Products - Security - [' + role + '] can [insert, update]', f
     })
   }
 
+  var sub2
   function onUpdate(error, response) {
-    Meteor.subscribe('mart/storefront', storefrontId, function() {
+    sub2 = Meteor.subscribe('mart/storefront', storefrontId, function() {
       var product = Mart.Products.findOne(productId)
       test.equal(product.name, "hotness")
 
+      sub1.stop()
+      sub2.stop()
       done()
     })
   }
