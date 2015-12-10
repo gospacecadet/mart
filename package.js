@@ -52,8 +52,7 @@ Package.onUse(function(api) {
     'lib/security-helpers.js',
     'lib/storefront/storefronts.js',
     "lib/images/images.js",
-    // 'lib/gateways/gateways.js',
-    // 'lib/gateways/test/test.js',
+    'lib/gateways/gateways.js',
     'lib/payment_methods/cards/cards.js',
     // "lib/gateways/stripe/stripe.js",
     'lib/products/products.js',
@@ -79,6 +78,7 @@ Package.onUse(function(api) {
   api.add_files([
     'lib/images/images-client.js',
     'lib/accounts/accounts-client.js',
+    'lib/payment_methods/cards/cards_client.js',
     // "lib/gateways/test/test_client.js",
     // "lib/gateways/stripe/stripe_client.js",
     'lib/carts/carts_client.js'
@@ -106,7 +106,6 @@ Package.onTest(function(api) {
   api.addFiles([
     'test/helpers.js',
     // 'test/gateways/test-tests.js',
-    // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
     'test/line-items/line-item-tests.js',
     'test/carts/cart-tests.js'
@@ -114,7 +113,6 @@ Package.onTest(function(api) {
 
   api.addFiles([
     // 'test/gateways/test-tests.js',
-    // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
     'test/accounts/accounts-validation-tests.js',
     'test/accounts/accounts-creation-tests.js',
@@ -122,6 +120,7 @@ Package.onTest(function(api) {
     'test/storefront/storefronts-security-tests.js',
     'test/images/image-tests.js',
     'test/products/products-security-tests.js',
-    'test/carts/guest-cart-tests.js'
+    'test/carts/guest-cart-tests.js',
+    'test/payment_methods/card-tests.js'
   ], "client");
 });
