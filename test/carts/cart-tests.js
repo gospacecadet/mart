@@ -1,5 +1,5 @@
 if(Meteor.isServer) {
-  Tinytest.add('Cart - has a subtotal', function (test) {
+  Tinytest.add('Carts - has a subtotal', function (test) {
     var cartId = Mart.Carts.insert({userId: "testId"}, {validate: false}) // can't login users easily
     var cart = Mart.Carts.findOne(cartId)
 
@@ -47,7 +47,7 @@ if(Meteor.isServer) {
 }
 
 if(Meteor.isClient){
-  Tinytest.addAsync('Cart - successful checkout', function(test, done) {
+  Tinytest.addAsync('Carts - successful checkout', function(test, done) {
     var originalCart, goodCardId,
         contactDetails = {
           contactName: "Marvin Arnold",
@@ -76,7 +76,7 @@ if(Meteor.isClient){
       Meteor.subscribe("mart/carts", [
         Mart.Cart.STATES.SHOPPING,
         Mart.Cart.STATES.AWAITING_PAYMENT
-      ], onCartReady);
+      ], guestId(), onCartReady);
     }
 
     // 5 - Create card for logged in user

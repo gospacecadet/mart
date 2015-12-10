@@ -36,7 +36,7 @@ Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) 
       testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, function() {
         // Create current cart
         Meteor.call('mart/cart/findCurrentOrCreate', function() {
-          Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], function() {
+          Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], null, function() {
             var cart = Mart.Carts.findOne()
             cartId = cart._id
             doTest()

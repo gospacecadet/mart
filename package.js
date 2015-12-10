@@ -21,7 +21,8 @@ Package.onUse(function(api) {
     'accounts-base',
     'accounts-password',
     'blaze-html-templates',
-    'random'
+    'random',
+    'amplify'
   ]);
 
   // Meteor regulars
@@ -107,7 +108,7 @@ Package.onTest(function(api) {
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
     'test/line-items/line-item-tests.js',
-    'test/cart-tests.js'
+    'test/carts/cart-tests.js'
   ]);
 
   api.addFiles([
@@ -119,6 +120,7 @@ Package.onTest(function(api) {
     'test/storefront/storefronts-publications-tests.js',
     'test/storefront/storefronts-security-tests.js',
     'test/images/image-tests.js',
-    'test/products/products-security-tests.js'
+    'test/products/products-security-tests.js',
+    'test/carts/guest-cart-tests.js'
   ], "client");
 });
