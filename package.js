@@ -69,7 +69,9 @@ Package.onUse(function(api) {
     // 'lib/gateways/gateways_server.js',
     // "lib/gateways/stripe/stripe_server.js",
     'lib/line_items/line_items_server.js',
-    'lib/carts/carts_server.js'
+    'lib/carts/carts_server.js',
+    'lib/carts/carts-publications.js',
+    'lib/carts/carts-security.js'
   ], "server")
 
   api.add_files([
@@ -104,7 +106,7 @@ Package.onTest(function(api) {
     // 'test/gateways/test-tests.js',
     // 'test/card-tests.js',
     // 'test/gateways/stripe-tests.js',
-    'test/line-item-tests.js',
+    'test/line-items/line-item-tests.js',
     'test/cart-tests.js'
   ]);
 

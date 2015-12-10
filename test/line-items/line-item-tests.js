@@ -1,3 +1,65 @@
+// can only add to cart that belongs to current user and is in shopping state (default cart)
+// can only add to product that is published [TODO: and belongs to published store]
+if(Meteor.isClient) {
+Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) {
+  var productId, cartId, storefrontId
+
+  testLogout(test, createProduct)
+
+  function createProduct() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function() {
+      Mart.Storefronts.insert({
+        name: "testtest",
+        description: "asasdfsadf dasfasdd",
+        isPublished: true,
+      }, function(error, sId) {
+        storefrontId = sId
+        Meteor.subscribe("mart/storefront", storefrontId, function() {
+          Mart.Products.insert({
+            storefrontId: storefrontId,
+            name: "asd;skdf sdf",
+            description: "a;sldfjkas;dlf",
+            unitPrice: 45.23,
+            isPublished: true
+          }, function(error, pId) {
+            productId = pId
+            begin()
+          })
+        })
+      })
+    })
+  }
+
+  function begin() {
+    testLogout(test, function() {
+      // Login as shopper
+      testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, function() {
+        // Create current cart
+        Meteor.call('mart/cart/findCurrentOrCreate', function() {
+          Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], function() {
+            var cart = Mart.Carts.findOne()
+            cartId = cart._id
+            doTest()
+          });
+        });
+      })
+    })
+  }
+
+  function doTest() {
+    Mart.LineItems.insert({
+      productId: productId,
+      cartId: cartId,
+      quantity: 20,
+    }, function(error, response) {
+      test.isUndefined(error)
+
+      done()
+    })
+  }
+})
+}
+
 if(Meteor.isServer) {
   var cartId = Mart.Carts.insert({userId: "testId"}, {validate: false}) // can't login users easily
   var cart = Mart.Carts.findOne(cartId)
@@ -18,7 +80,7 @@ if(Meteor.isServer) {
     isPublished: true
   })
 
-  Tinytest.add('LineItem - remove', function (test) {
+  Tinytest.add('LineItems - remove', function (test) {
     var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
     var li = Mart.LineItems.findOne(lid)
 

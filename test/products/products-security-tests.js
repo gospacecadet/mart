@@ -37,6 +37,7 @@ Tinytest.addAsync('Products - Security - [Merchant] can [insert, update]', funct
     test.isUndefined(error)
     Meteor.subscribe('mart/storefront', storefrontId, function() {
       var product = Mart.Products.findOne(productId)
+      test.equal(product.storefrontId, storefrontId)
       test.equal(product.name, "asd;skdf sdf")
       test.equal(product.description, "a;sldfjkas;dlf")
       test.equal(product.unitPrice, 45.23),
@@ -97,6 +98,7 @@ Tinytest.addAsync('Products - Security - [' + role + '] can [insert, update]', f
     test.isUndefined(error)
     Meteor.subscribe('mart/storefront', storefrontId, function() {
       var product = Mart.Products.findOne(productId)
+      test.equal(product.storefrontId, storefrontId)
       test.equal(product.name, "asd;skdf sdf")
       test.equal(product.description, "a;sldfjkas;dlf")
       test.equal(product.unitPrice, 45.23),
