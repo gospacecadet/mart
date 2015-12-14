@@ -39,6 +39,7 @@ Package.onUse(function(api) {
     'ongoworks:security@1.3.0',
     'momentjs:moment@2.10.6',
     'alanning:roles@1.2.14',
+    'marvin:machina@0.1.2'
     // 'matb33:collection-hooks@0.7.5',
   ]);
 
@@ -72,7 +73,8 @@ Package.onUse(function(api) {
     'lib/line_items/line_items_server.js',
     'lib/carts/carts_server.js',
     'lib/carts/carts-publications.js',
-    'lib/carts/carts-security.js'
+    'lib/carts/carts-security.js',
+    'lib/carts/carts-machina.js',
   ], "server")
 
   api.add_files([
@@ -110,6 +112,10 @@ Package.onTest(function(api) {
     'test/line-items/line-item-tests.js',
     'test/carts/cart-tests.js'
   ]);
+
+  api.addFiles([
+    'test/carts/cart-machina-tests.js'
+  ], 'server')
 
   api.addFiles([
     // 'test/gateways/test-tests.js',

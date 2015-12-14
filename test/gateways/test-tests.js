@@ -1,4 +1,4 @@
-Tinytest.addAsync('Gateways::Test - update-gateway-info', function(test, done) {
+Tinytest.addAsync('Gateways - Test - update-gateway-info', function(test, done) {
   Meteor.call('mart/update-gateway-info', "Test", {}, function(err, result) {
     test.isUndefined(err, "Unable to sucessfully update the gateway's info: ")
 
@@ -30,7 +30,7 @@ var card = {
 }
 
 if(Meteor.isClient) {
-  Tinytest.addAsync('Gateways::Test - create-card', function(test, done) {
+  Tinytest.addAsync('Gateways - Test - create-card', function(test, done) {
     loginWCallback(test, onUser1LoggedIn)
 
     function onUser1LoggedIn(err) {

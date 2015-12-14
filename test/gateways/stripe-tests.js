@@ -21,7 +21,7 @@ var expectedAccountInfo = {
   transfersEnabled: false,
 }
 
-Tinytest.addAsync('Gateways::Stripe - update-gateway-info', function(test, done) {
+Tinytest.addAsync('Gateways - Stripe - update-gateway-info', function(test, done) {
   Meteor.call('mart/update-gateway-info',
     "Stripe", {secretKey: keys.secret}, function(err, result) {
       test.isUndefined(err, "Unable to sucessfully update the gateway's info")
@@ -53,7 +53,7 @@ var card = {
 }
 
 if(Meteor.isClient) {
-  Tinytest.addAsync('Gateways::Stripe - create-card', function(test, done) {
+  Tinytest.addAsync('Gateways - Stripe - create-card', function(test, done) {
     loginWCallback(test, onUser1LoggedIn)
 
     function onUser1LoggedIn(err) {
