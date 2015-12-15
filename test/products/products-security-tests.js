@@ -27,7 +27,7 @@ Tinytest.addAsync('Products - Security - [Merchant] can [insert, update]', funct
       storefrontId: storefrontId,
       name: "asd;skdf sdf",
       description: "a;sldfjkas;dlf",
-      unitPrice: 45.23,
+      unitPrice: 4523,
       isPublished: false
     }, onProductInserted)
   }
@@ -41,7 +41,7 @@ Tinytest.addAsync('Products - Security - [Merchant] can [insert, update]', funct
       test.equal(product.storefrontId, storefrontId)
       test.equal(product.name, "asd;skdf sdf")
       test.equal(product.description, "a;sldfjkas;dlf")
-      test.equal(product.unitPrice, 45.23),
+      test.equal(product.unitPrice, 4523),
       test.isFalse(product.isPublished)
       test.isFalse(product.isDeleted)
 
@@ -92,7 +92,7 @@ Tinytest.addAsync('Products - Security - [' + role + '] can [insert, update]', f
       storefrontId: storefrontId,
       name: "asd;skdf sdf",
       description: "a;sldfjkas;dlf",
-      unitPrice: 45.23,
+      unitPrice: 4523,
       isPublished: false
     }, onProductInserted)
   }
@@ -106,7 +106,7 @@ Tinytest.addAsync('Products - Security - [' + role + '] can [insert, update]', f
       test.equal(product.storefrontId, storefrontId)
       test.equal(product.name, "asd;skdf sdf")
       test.equal(product.description, "a;sldfjkas;dlf")
-      test.equal(product.unitPrice, 45.23),
+      test.equal(product.unitPrice, 4523),
       test.isFalse(product.isPublished)
       test.isFalse(product.isDeleted)
 

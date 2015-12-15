@@ -1,11 +1,3 @@
-var keys = {
-  // SpaceCadet
-  // public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
-  // secret: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
-  // MA Stripe Tester - marvin@unplugged.im
-  public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
-  secret: "sk_test_0cTn23SpzgOTmM3XBNBgqw7W"
-}
 var expectedAccountInfo = {
   // SpaceCadet
   // businessName: "SpaceCadet Fleet, Inc",
@@ -52,16 +44,28 @@ var card = {
   number: 4242424242424242
 }
 
+
+
+if(Meteor.isServer){
+  Mart.GatewayTypes.Stripe.Customers.remove({})
+}
+
 if(Meteor.isClient) {
   Tinytest.addAsync('Gateways - Stripe - create-card', function(test, done) {
-    loginWCallback(test, onUser1LoggedIn)
+    var expectedCard, userId, cardId
+
+    testLogout(test, function() {
+      testLogin([Mart.ROLES.GLOBAL.SHOPPPER], test, onUser1LoggedIn)
+    })
 
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
+      userId = Meteor.userId()
       Mart.Card.createCard("Stripe", card, {
         publicKey: keys.public,
         secretKey: keys.secret,
-      }, function(err, cardId) {
+      }, function(err, cId) {
+        cardId = cId
         test.isUndefined(err, 'Unexpected error CREATING CARD:');
         Meteor.subscribe('mart/cards', onCardsReady)
       })
@@ -69,17 +73,12 @@ if(Meteor.isClient) {
 
     function onCardsReady() {
       test.equal(Mart.Cards.find().count(), 1)
-      var expectedCard = Mart.Cards.findOne()
+      expectedCard = Mart.Cards.findOne(cardId)
       test.equal(expectedCard.last4, 4242)
       test.equal(expectedCard.expMonth, 10)
       test.equal(expectedCard.expYear, 2019)
       test.equal(expectedCard.nameOnCard, "Marvin Arnold")
       test.equal(expectedCard.brand, "Visa")
-
-      // TODO test that customer created
-      // customers is server side only collection so hard to see
-      // Stripe does not provide test tokens, so can't bypass
-      // client and only test server methods
 
       done();
     }

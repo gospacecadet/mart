@@ -1,5 +1,5 @@
-Tinytest.addAsync('Gateways - Test - update-gateway-info', function(test, done) {
-  Meteor.call('mart/update-gateway-info', "Test", {}, function(err, result) {
+Tinytest.addAsync('Gateways - Test - mart/update-gateway-info', function(test, done) {
+  Meteor.call('mart/update-gateway-info', "Test", {}, function(err, gatewayId) {
     test.isUndefined(err, "Unable to sucessfully update the gateway's info: ")
 
     if(Meteor.isServer)
@@ -9,8 +9,7 @@ Tinytest.addAsync('Gateways - Test - update-gateway-info', function(test, done) 
       Meteor.subscribe('mart/gateways', checkGateway)
 
     function checkGateway() {
-
-      gateway = Mart.Gateways.findOne()
+      gateway = Mart.Gateways.findOne(gatewayId)
       test.equal(gateway.businessName, "Test Gateway Business Name")
       test.equal(gateway.businessURL, "example.com")
       test.isFalse(gateway.detailsSubmitted)
@@ -31,7 +30,7 @@ var card = {
 
 if(Meteor.isClient) {
   Tinytest.addAsync('Gateways - Test - create-card', function(test, done) {
-    loginWCallback(test, onUser1LoggedIn)
+    testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, onUser1LoggedIn)
 
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
@@ -49,7 +48,7 @@ if(Meteor.isClient) {
       test.equal(expectedCard.expYear, 2019)
       test.equal(expectedCard.nameOnCard, "Marvin Arnold")
       test.equal(expectedCard.brand, "Visa")
-      test.equal(expectedCard.gateway, "Test")
+      test.isUndefined(expectedCard.gateway)
       done();
     }
   })

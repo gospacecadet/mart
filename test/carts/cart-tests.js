@@ -20,7 +20,7 @@ if(Meteor.isServer) {
     var productId1 = Mart.Products.insert({
       name: "test product",
       description: "a test description",
-      unitPrice: 5.23,
+      unitPrice: 523,
       storefrontId: storefrontId1,
       isActive: true
     })
@@ -28,7 +28,7 @@ if(Meteor.isServer) {
     var productId2 = Mart.Products.insert({
       name: "test product2",
       description: "a test description2",
-      unitPrice: 1098.92,
+      unitPrice: 109892,
       storefrontId: storefrontId2,
       isActive: true
     })
@@ -36,29 +36,54 @@ if(Meteor.isServer) {
     Mart.LineItems.insert({productId: productId1, quantity: 3, cartId: cartId})
     Mart.LineItems.insert({productId: productId2, quantity: 42, cartId: cartId})
 
-    test.equal(Mart.Cart.subtotal(cartId), 5.23*3 + 42*1098.92)
+    test.equal(Mart.Carts.findOne(cartId).subtotal(), 523*3 + 42*109892)
   })
-}
-
-
-if(Meteor.isServer) {
-  // 1 - Create card that doesnt belong to user
-  var badCardId = Mart.Cards.insert({}, {validate: false})
 }
 
 if(Meteor.isClient){
   Tinytest.addAsync('Carts - successful checkout', function(test, done) {
-    var originalCart, goodCardId,
+    var cartId, cardId, productId, storefrontId,
         contactDetails = {
           contactName: "Marvin Arnold",
           contactEmail: "marvin@unplugged.im",
           contactPhone: "+13016864576",
           contactEntity: "yo mama",
-          state: Mart.Cart.STATES.AWAITING_PAYMENT
         }
 
-    testLogout(test, begin)
-    function begin() {
+    testLogout(test, beginMerchant)
+
+    function beginMerchant() {
+      testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onLogin)
+    }
+
+    function onLogin() {
+      Mart.Storefronts.insert({
+        name: "testtest",
+        description: "asasdfsadf dasfasdd",
+        isPublished: true,
+      }, onStorefrontInserted)
+    }
+
+    var prodSub
+    function onStorefrontInserted(error, response) {
+      storefrontId = response
+      Mart.Products.insert({
+        storefrontId: storefrontId,
+        name: "asd;skdf sdf",
+        description: "a;sldfjkas;dlf",
+        unitPrice: 4523,
+        isPublished: true
+      }, onProductInserted)
+    }
+
+    function onProductInserted(error, result) {
+      console.log('onProductInserted '+result);
+      productId = result
+      testLogout(test, beginShopper)
+    }
+
+    // create products
+    function beginShopper() {
       // 2 - Login user
       testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, onUserLoggedIn)
     }
@@ -66,85 +91,147 @@ if(Meteor.isClient){
     // 3 - Create default cart
     function onUserLoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in');
-      done()
-      // Meteor.call('mart/cart/findCurrentOrCreate', onCartCreated)
+      Meteor.subscribe("mart/product", productId, function() {
+        Meteor.subscribe("mart/storefront", storefrontId, function() {
+          Meteor.call('mart/cart/findCurrentOrCreate', onCartCreated)
+        });
+      });
     }
 
     var sub4
     // 4 - Subscribe to default cart
     function onCartCreated(error, result) {
       test.isUndefined(error, 'Could not create default cart');
+      cartId = result
       sub4 = Meteor.subscribe("mart/carts", [
-        Mart.Cart.STATES.SHOPPING,
-        Mart.Cart.STATES.AWAITING_PAYMENT
-      ], guestId(), onCartReady);
+        Mart.Cart.STATES.SHOPPING
+      ], Mart.guestId(), onCartReady);
     }
 
     // 5 - Create card for logged in user
     function onCartReady() {
-      originalCart = Mart.Carts.findOne()
-      test.isTrue(originalCart !== undefined, 'Expected there to be a default cart');
+      test.equal(Mart.Carts.find().count(), 1)
+      var cart = Mart.Carts.findOne(cartId)
+      test.isNotUndefined(cart, 'Expected there to be a default cart');
+      test.equal(cart.state, Mart.Cart.STATES.SHOPPING)
 
       var card = {
-        last4: 1234,
-        expMonth: 11,
-        expYear: 2019,
         nameOnCard: "Marvin Arnold",
-        brand: "Visa",
-        gatewayToken: "testToken",
-        gateway: "Test"
+        expMonth: 10,
+        expYear: 2019,
+        cvc: 123,
+        number: 4242424242424242
       }
 
-      Mart.Cards.insert(card, onCardCreated)
+      Mart.Card.createCard("Stripe", card, {
+        publicKey: keys.public,
+        secretKey: keys.secret,
+      }, onCardCreated)
     }
 
+    var sub6
     // 6 - Try to update cart with bad card
     function onCardCreated(error, result) {
-      test.isUndefined(error, 'Could not create a card for user');
-      goodCardId = result
-      var goodCard = Mart.Cards.findOne(goodCardId)
-      test.isTrue(goodCard.userId !== undefined, 'Good card did not have its userId set correctly');
+      sub6 = Meteor.subscribe("mart/cards", Mart.guestId(), function() {
+        test.isUndefined(error, 'Could not create a card for user');
+        cardId = result
+        var card = Mart.Cards.findOne(cardId)
+        test.isNotUndefined(card);
 
-      Mart.Carts.update(originalCart._id, {$set:
-        _.extend(contactDetails, {
-          cardId: badCardId
-        }
-      )}, onBadCardUpdate)
-
+        Mart.Carts.update(cartId, {$set:
+          _.extend(contactDetails, {
+            cardId: cardId
+          }
+        )}, addItemsToCart)
+      });
     }
 
-    // 7 - Verify can't add cart to card unless common owner
-    function onBadCardUpdate(error, response) {
-      test.isTrue(error !== undefined, 'Expected there to be an error w/ bad card');
-
-      Mart.Carts.update(originalCart._id, {$set:
-        _.extend(contactDetails, {
-          cardId: goodCardId
-        }
-      )}, onGoodCardUpdate)
-    }
-
-    // 8 - Can add card of common owner
-    function onGoodCardUpdate(error, response) {
+    function addItemsToCart(error, response) {
       test.isUndefined(error, 'Could not update cart with good card');
+      console.log('productId ' + productId);
+      console.log('cartId ' + cartId);
+      Mart.LineItems.insert({
+        productId: productId,
+        cartId: cartId,
+        quantity: 2,
+      }, onCartUpdate)
+    }
 
-      var updatedCart = Mart.Carts.findOne(originalCart._id)
-      test.equal(updatedCart.state, Mart.Cart.STATES.AWAITING_PAYMENT)
-      test.equal(updatedCart.cardId, goodCardId)
+    var sub8
+    // 8 - Can add card of owner to cart
+    function onCartUpdate(error, response) {
+      var updatedCart = Mart.Carts.findOne(cartId)
+      test.equal(updatedCart.state, Mart.Cart.STATES.SHOPPING)
+      test.equal(updatedCart.cardId, cardId)
       test.equal(updatedCart.contactName, contactDetails.contactName)
       test.equal(updatedCart.contactEmail, contactDetails.contactEmail)
       test.equal(updatedCart.contactPhone, contactDetails.contactPhone)
       test.equal(updatedCart.contactEntity, contactDetails.contactEntity)
 
-      Meteor.call('mart/cart/findCurrentOrCreate', onNextCartCreated)
+      Meteor.call("mart/submit-cart", cartId, {
+        serviceFeePct: 0.1,
+        connectionFeePct: 0.1,
+        taxPct: 0.1,
+        merchantCut: 0.5
+      },function(error, result) {
+        test.isUndefined(error)
+        sub8 = Meteor.subscribe("mart/carts",
+          [Mart.Cart.STATES.WAITING_CART_ACCEPTANCE],
+          Mart.guestId(), onSubmitCart)
+      });
     }
 
-    function onNextCartCreated(error, result) {
-      var finalCart = Mart.Carts.findOne({state: Mart.Cart.STATES.SHOPPING})
-      test.isFalse(finalCart._id === originalCart._id)
+    // Ensure in correct state and further updates not allowed
+    function onSubmitCart() {
+      var cart = Mart.Carts.findOne(cartId)
+      test.equal(cart.state, Mart.Cart.STATES.WAITING_CART_ACCEPTANCE)
+      test.equal(cart.subtotal(), 2 * 4523)
+      test.equal(cart.total(), 1)
+      test.equal(cart.serviceFee, 1)
+      test.equal(cart.connectionFee, 1)
+      test.equal(cart.tax, 1)
+      test.equal(cart.merchantCut, 1)
 
+      Mart.Carts.update(cartId, {$set:
+        _.extend(contactDetails, {
+          cardId: cardId
+        }
+      )}, onCartReupdate)
+    }
+
+    var sub9
+    function onCartReupdate(error, result) {
+      test.isNotUndefined(error)
+      Meteor.call("mart/make-payment", cartId, function(error, result){
+        test.isUndefined(error)
+
+        // wait a few seconds for processing
+        Meteor.setTimeout(function () {
+          sub9 = Meteor.subscribe("mart/carts",
+            [Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE],
+            Mart.guestId(), onMakePayment)
+        }, 3 * 1000);
+
+      });
+    }
+
+    function onMakePayment() {
+      var cart = Mart.Carts.findOne(cartId)
+      // test.equal(cart.state, Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE)
+      // test.equal(cart.paymentOn, )
+      // test.equal(cart.paymentConfirmation, )
+      // test.equal(cart.paymentAmount, )
+
+
+      finish()
+    }
+
+    function finish() {
       sub4.stop()
-      done();
+      sub6.stop()
+      sub8.stop()
+      sub9.stop()
+      done()
     }
   })
 }

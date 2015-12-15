@@ -1,5 +1,16 @@
 Accounts.removeDefaultRateLimit()
 
+if(Meteor.isClient){
+  keys = {
+    // SpaceCadet
+    // public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
+    // secret: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
+    // MA Stripe Tester - marvin@unplugged.im
+    public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
+    secret: "sk_test_0cTn23SpzgOTmM3XBNBgqw7W"
+  }
+}
+
 if(Meteor.isServer){
   Meteor.methods({
     'mart/test/add-roles': function(userId, roles){

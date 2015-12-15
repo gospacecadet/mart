@@ -55,7 +55,8 @@ Package.onUse(function(api) {
     "lib/images/images.js",
     'lib/gateways/gateways.js',
     'lib/payment_methods/cards/cards.js',
-    // "lib/gateways/stripe/stripe.js",
+    "lib/gateways/stripe/stripe.js",
+    'lib/gateways/test/test.js',
     'lib/products/products.js',
     'lib/line_items/line_items.js',
     'lib/carts/carts.js',
@@ -68,8 +69,8 @@ Package.onUse(function(api) {
     "lib/payment_methods/cards/cards_server.js",
     'lib/products/products-publications.js',
     'lib/products/products-security.js',
-    // 'lib/gateways/gateways_server.js',
-    // "lib/gateways/stripe/stripe_server.js",
+    'lib/gateways/gateways_server.js',
+    "lib/gateways/stripe/stripe_server.js",
     'lib/line_items/line_items_server.js',
     'lib/carts/carts_server.js',
     'lib/carts/carts-publications.js',
@@ -81,8 +82,8 @@ Package.onUse(function(api) {
     'lib/images/images-client.js',
     'lib/accounts/accounts-client.js',
     'lib/payment_methods/cards/cards_client.js',
-    // "lib/gateways/test/test_client.js",
-    // "lib/gateways/stripe/stripe_client.js",
+    "lib/gateways/test/test_client.js",
+    "lib/gateways/stripe/stripe_client.js",
     'lib/carts/carts_client.js'
   ], "client")
 
@@ -107,8 +108,8 @@ Package.onTest(function(api) {
 
   api.addFiles([
     'test/helpers.js',
-    // 'test/gateways/test-tests.js',
-    // 'test/gateways/stripe-tests.js',
+    'test/gateways/test-tests.js',
+    'test/gateways/stripe-tests.js',
     'test/line-items/line-item-tests.js',
     'test/carts/cart-tests.js'
   ]);
