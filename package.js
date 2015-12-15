@@ -59,6 +59,7 @@ Package.onUse(function(api) {
     'lib/gateways/test/test.js',
     'lib/products/products.js',
     'lib/line_items/line_items.js',
+    'lib/bank-accounts/bank-accounts.js',
     'lib/carts/carts.js',
   ])
 
@@ -111,23 +112,24 @@ Package.onTest(function(api) {
     'test/gateways/test-tests.js',
     'test/gateways/stripe-tests.js',
     'test/line-items/line-item-tests.js',
-    'test/carts/cart-tests.js'
   ]);
 
   api.addFiles([
-    'test/carts/cart-machina-tests.js'
   ], 'server')
 
   api.addFiles([
-    // 'test/gateways/test-tests.js',
-    // 'test/gateways/stripe-tests.js',
     'test/accounts/accounts-validation-tests.js',
     'test/accounts/accounts-creation-tests.js',
     'test/storefront/storefronts-publications-tests.js',
     'test/storefront/storefronts-security-tests.js',
     'test/images/image-tests.js',
+    'test/payment_methods/card-tests.js',
     'test/products/products-security-tests.js',
-    'test/carts/guest-cart-tests.js',
-    'test/payment_methods/card-tests.js'
+    'test/carts/guest-cart-settled-test.js',
+    'test/carts/cart-settled-test.js',
+    'test/carts/cart-cancelled-by-admin-test.js',
+    'test/carts/cart-cancelled-by-payment-test.js',
+    'test/carts/cart-cancelled-by-merchant-test.js',
+    'test/carts/cart-fail-transfer-test.js',
   ], "client");
 });
