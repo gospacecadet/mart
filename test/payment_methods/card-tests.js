@@ -16,17 +16,11 @@ Tinytest.addAsync('Card - Shopper - cannot create cards directly', function(test
     }
 
     Mart.Cards.insert(card, function(error, cardId) {
-      test.isUndefined(error, 'Unexpected error inserting card');
-      sub1 = Meteor.subscribe('mart/cards', Mart.guestId(), onCardsReady)
+      test.isNotUndefined(error, 'Unexpected error inserting card');
+      done();
     })
   }
 
-  function onCardsReady() {
-    var card = Mart.Cards.findOne()
-
-    sub1.stop()
-    done();
-  }
 })
 
 Tinytest.addAsync('Card - Guest - cannot create cards directly', function(test, done) {
@@ -47,16 +41,8 @@ Tinytest.addAsync('Card - Guest - cannot create cards directly', function(test, 
     }
 
     Mart.Cards.insert(card, function(error, cardId) {
-      test.isUndefined(error, 'Unexpected error inserting card');
-      sub1 = Meteor.subscribe('mart/cards', Mart.guestId(), onCardsReady)
+      test.isNotUndefined(error, 'Unexpected error inserting card');
+      done()
     })
-  }
-
-  function onCardsReady() {
-    var card = Mart.Cards.findOne()
-    test.isUndefined(card)
-
-    sub1.stop()
-    done();
   }
 })

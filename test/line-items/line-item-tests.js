@@ -177,6 +177,6 @@ if(Meteor.isServer) {
   Tinytest.add('LineItems - has a subtotal', function (test) {
     var lid = Mart.LineItems.insert({productId: productId, quantity: 3, cartId: cartId})
 
-    test.equal(Mart.LineItem.subtotal(lid), 523 * 3)
+    test.equal(Mart.LineItems.findOne(lid).subtotal(), 523 * 3)
   })
 }

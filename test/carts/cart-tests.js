@@ -48,7 +48,8 @@ if(Meteor.isClient){
           contactEmail: "marvin@unplugged.im",
           contactPhone: "+13016864576",
           contactEntity: "yo mama",
-        }
+        },
+        price = randomPrice()
 
     testLogout(test, beginMerchant)
 
@@ -71,13 +72,12 @@ if(Meteor.isClient){
         storefrontId: storefrontId,
         name: "asd;skdf sdf",
         description: "a;sldfjkas;dlf",
-        unitPrice: 4523,
+        unitPrice: price,
         isPublished: true
       }, onProductInserted)
     }
 
     function onProductInserted(error, result) {
-      console.log('onProductInserted '+result);
       productId = result
       testLogout(test, beginShopper)
     }
@@ -148,8 +148,6 @@ if(Meteor.isClient){
 
     function addItemsToCart(error, response) {
       test.isUndefined(error, 'Could not update cart with good card');
-      console.log('productId ' + productId);
-      console.log('cartId ' + cartId);
       Mart.LineItems.insert({
         productId: productId,
         cartId: cartId,
@@ -169,10 +167,9 @@ if(Meteor.isClient){
       test.equal(updatedCart.contactEntity, contactDetails.contactEntity)
 
       Meteor.call("mart/submit-cart", cartId, {
-        serviceFeePct: 0.1,
-        connectionFeePct: 0.1,
+        serviceFeePct: 0.3,
+        connectionFeePct: 0.2,
         taxPct: 0.1,
-        merchantCut: 0.5
       },function(error, result) {
         test.isUndefined(error)
         sub8 = Meteor.subscribe("mart/carts",
@@ -181,47 +178,45 @@ if(Meteor.isClient){
       });
     }
 
-    // Ensure in correct state and further updates not allowed
+    // Ensure in correct state, correct values, and further updates not allowed
     function onSubmitCart() {
       var cart = Mart.Carts.findOne(cartId)
       test.equal(cart.state, Mart.Cart.STATES.WAITING_CART_ACCEPTANCE)
-      test.equal(cart.subtotal(), 2 * 4523)
-      test.equal(cart.total(), 1)
-      test.equal(cart.serviceFee, 1)
-      test.equal(cart.connectionFee, 1)
-      test.equal(cart.tax, 1)
-      test.equal(cart.merchantCut, 1)
+      test.equal(cart.subtotal(), 2 * price)
+      test.equal(cart.connectionFee, Math.floor(0.2 * cart.subtotal()))
+      test.equal(cart.merchantCut, Math.ceil((1 - 0.2) * cart.subtotal()))
+      test.equal(cart.connectionFee + cart.merchantCut, cart.subtotal())
 
-      Mart.Carts.update(cartId, {$set:
-        _.extend(contactDetails, {
-          cardId: cardId
-        }
-      )}, onCartReupdate)
+      test.equal(cart.serviceFee, Math.floor(0.3 * cart.subtotal()))
+      test.equal(cart.preTaxTotal(), cart.subtotal() + cart.serviceFee)
+
+      test.equal(cart.tax, Math.floor(cart.preTaxTotal() * 0.1))
+
+      test.equal(cart.total(), cart.preTaxTotal() + cart.tax)
+      makePayment()
     }
 
     var sub9
-    function onCartReupdate(error, result) {
-      test.isNotUndefined(error)
-      Meteor.call("mart/make-payment", cartId, function(error, result){
+    function makePayment() {
+      Meteor.call("mart/make-payment", cartId, {secretKey: keys.secret}, function(error, result) {
         test.isUndefined(error)
 
         // wait a few seconds for processing
         Meteor.setTimeout(function () {
           sub9 = Meteor.subscribe("mart/carts",
             [Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE],
-            Mart.guestId(), onMakePayment)
-        }, 3 * 1000);
-
+            Mart.guestId(),
+            onDonePayment)
+        }, 2 * 1000);
       });
     }
 
-    function onMakePayment() {
+    function onDonePayment() {
       var cart = Mart.Carts.findOne(cartId)
-      // test.equal(cart.state, Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE)
-      // test.equal(cart.paymentOn, )
-      // test.equal(cart.paymentConfirmation, )
-      // test.equal(cart.paymentAmount, )
-
+      test.equal(cart.state, Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE)
+      testIsRecent(cart.paymentAt, test)
+      test.equal(typeof cart.paymentConfirmation, 'string')
+      test.equal(cart.paymentAmount, cart.total())
 
       finish()
     }

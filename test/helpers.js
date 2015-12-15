@@ -1,14 +1,25 @@
 Accounts.removeDefaultRateLimit()
 
-if(Meteor.isClient){
-  keys = {
-    // SpaceCadet
-    // public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
-    // secret: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
-    // MA Stripe Tester - marvin@unplugged.im
-    public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
-    secret: "sk_test_0cTn23SpzgOTmM3XBNBgqw7W"
-  }
+randomPrice = function() {
+  return Math.floor(Math.exp(10, 3) * Math.random())
+}
+
+testIsRecent = function(time, test) {
+  var now = new Date().getTime()
+  var before = now - (5*1000)
+  var after = now + (5*1000)
+
+  test.isTrue(time.getTime() > before)
+  test.isTrue(time.getTime() < after)
+}
+
+keys = {
+  // SpaceCadet
+  // public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
+  // secret: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
+  // MA Stripe Tester - marvin@unplugged.im
+  public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
+  secret: "sk_test_0cTn23SpzgOTmM3XBNBgqw7W"
 }
 
 if(Meteor.isServer){
