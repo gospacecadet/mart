@@ -23,7 +23,8 @@ Package.onUse(function(api) {
     'blaze-html-templates',
     'random',
     'amplify',
-    'tracker'
+    'tracker',
+    'http'
   ]);
 
   // Meteor regulars
@@ -61,7 +62,6 @@ Package.onUse(function(api) {
     'lib/line_items/line_items.js',
     'lib/bank-accounts/bank-accounts.js',
     'lib/carts/carts.js',
-
   ])
 
   api.add_files([
@@ -78,7 +78,9 @@ Package.onUse(function(api) {
     'lib/carts/carts-publications.js',
     'lib/carts/carts-security.js',
     'lib/carts/carts-machina.js',
-    'lib/bank-accounts/bank-accounts-server.js'
+    'lib/bank-accounts/bank-accounts-server.js',
+    'lib/gateways/stripe/stripe-customers.js',
+    'lib/gateways/stripe/stripe-managed-accounts.js',
   ], "server")
 
   api.add_files([

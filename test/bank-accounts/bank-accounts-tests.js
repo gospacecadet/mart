@@ -36,9 +36,37 @@ if(Meteor.isClient) {
       test.equal(bankAccount.bankName, "STRIPE TEST BANK")
       test.equal(bankAccount.country, "US")
       test.equal(bankAccount.currency, "usd")
+      test.equal(bankAccount.gateway, "Stripe")
+      test.isTrue(bankAccount.isDefault)
+      test.isFalse(bankAccount.isVerified)
 
-      baSub.stop()
-      done()
+      verifyManagedAccount()
+    }
+
+    function verifyManagedAccount() {
+      Meteor.call("mart/stripe/verify", {
+        legal_entity: {
+          dob: {
+            day: 19,
+            month: 10,
+            year: 1988,
+          },
+          first_name: "Marvin",
+          last_name: "Arnold",
+          type: "corporation"
+        },
+        // tos_acceptance: {
+        //   date:,
+        //   ip:
+        // }
+      }, function(error, result) {
+        test.isUndefined(error)
+        test.isTrue(result)
+
+        baSub.stop()
+        done()
+      });
+
     }
   })
 }
