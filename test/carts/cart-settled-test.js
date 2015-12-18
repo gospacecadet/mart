@@ -1,6 +1,6 @@
 Tinytest.addAsync('Carts - successful checkout', function(test, done) {
   var cartId, cardId, productId, storefrontId, merchantBankAccountId,
-      bankAccountId,
+      bankAccountId, shopperId, merchantManagedAccountId,
       contactDetails = {
         contactName: "Marvin Arnold",
         contactEmail: "marvin@unplugged.im",
@@ -45,8 +45,8 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
     Mart.createBankAccount('Stripe', bankAccount, function(err, bId) {
       test.isUndefined(err, 'Unexpected ERROR CREATING BANK ACCOUNT');
       bankAccountId = bId
+      testLogout(test, beginShopper)
     })
-    testLogout(test, beginShopper)
   }
 
   // create products
@@ -58,6 +58,7 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
   var prodSub, storeSub
   // 3 - Create default cart
   function onUserLoggedIn(err) {
+    shopperId = Meteor.userId()
     test.isUndefined(err, 'Unexpected error logging in');
     prodSub = Meteor.subscribe("mart/product", productId, function() {
       storeSub = Meteor.subscribe("mart/storefront", storefrontId, function() {
@@ -193,9 +194,9 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
           Meteor.setTimeout(function () {
             settledSub = Meteor.subscribe("mart/carts",
               [Mart.Cart.STATES.SETTLED],
-              Mart.guestId(),
+              shopperId,
               onDoneTransfer)
-          }, 2 * 1000);
+          }, 3 * 1000);
         });
       })
     })
@@ -203,6 +204,7 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
 
   function onDoneTransfer() {
     var cart = Mart.Carts.findOne(cartId)
+    test.isNotUndefined(cart)
     test.equal(cart.state, Mart.Cart.STATES.SETTLED)
     testIsRecent(cart.transferredAt, test)
     testIsRecent(cart.transferAcceptedAt, test)
@@ -210,7 +212,7 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
     test.equal(cart.transferAcceptedByAdminId, Meteor.userId())
     test.equal(typeof cart.transferConfirmation, 'string')
     test.equal(cart.transferAmount, cart.merchantCut)
-    test.equal(transferedToBankAccount, merchantBankAccountId)
+    test.equal(typeof transferredToManagedAccountId, 'string')
 
     finish()
   }

@@ -1,3 +1,20 @@
+////////////////////////////////////////////////
+// RECHARGE STRIPE ACCOUNT
+// curl https://api.stripe.com/v1/tokens \
+//    -u sk_test_0cTn23SpzgOTmM3XBNBgqw7W: \
+//    -d card[number]=4000000000000077 \
+//    -d card[exp_month]=12 \
+//    -d card[exp_year]=2016 \
+//    -d card[cvc]=123
+//
+// curl https://api.stripe.com/v1/charges \
+//    -u sk_test_0cTn23SpzgOTmM3XBNBgqw7W: \
+//    -d amount=40000000 \
+//    -d currency=usd \
+//    -d source=tok_17JVaHD745soaWcRgVW4JXdc \
+//    -d description="Charge for test@example.com"
+//////////////////////////////////////////////////
+
 Accounts.removeDefaultRateLimit()
 
 randomPrice = function() {
