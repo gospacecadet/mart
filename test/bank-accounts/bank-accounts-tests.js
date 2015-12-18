@@ -55,18 +55,17 @@ if(Meteor.isClient) {
           last_name: "Arnold",
           type: "corporation"
         },
-        // tos_acceptance: {
-        //   date:,
-        //   ip:
-        // }
       }, function(error, result) {
         test.isUndefined(error)
         test.isTrue(result)
 
-        baSub.stop()
-        done()
+        finish()
       });
+    }
 
+    function finish() {
+      baSub.stop()
+      done()
     }
   })
 }

@@ -15,7 +15,7 @@ var expectedAccountInfo = {
 
 Tinytest.addAsync('Gateways - Stripe - update-gateway-info', function(test, done) {
   Meteor.call('mart/update-gateway-info',
-    "Stripe", {secretKey: keys.secret}, function(err, result) {
+    "Stripe", function(err, result) {
       test.isUndefined(err, "Unable to sucessfully update the gateway's info")
 
       if(Meteor.isServer)
@@ -44,8 +44,6 @@ var card = {
   number: 4242424242424242
 }
 
-
-
 if(Meteor.isServer){
   Mart.GatewayTypes.Stripe.Customers.remove({})
 }
@@ -61,10 +59,7 @@ if(Meteor.isClient) {
     function onUser1LoggedIn(err) {
       test.isUndefined(err, 'Unexpected error logging in as user1');
       userId = Meteor.userId()
-      Mart.Card.createCard("Stripe", card, {
-        publicKey: keys.public,
-        secretKey: keys.secret,
-      }, function(err, cId) {
+      Mart.Card.createCard("Stripe", card, function(err, cId) {
         cardId = cId
         test.isUndefined(err, 'Unexpected error CREATING CARD:');
         Meteor.subscribe('mart/cards', onCardsReady)

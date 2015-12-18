@@ -1,5 +1,5 @@
 Tinytest.addAsync('Gateways - Test - mart/update-gateway-info', function(test, done) {
-  Meteor.call('mart/update-gateway-info', "Test", {}, function(err, gatewayId) {
+  Meteor.call('mart/update-gateway-info', "Test", function(err, gatewayId) {
     test.isUndefined(err, "Unable to sucessfully update the gateway's info: ")
 
     if(Meteor.isServer)
