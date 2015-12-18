@@ -61,6 +61,7 @@ Package.onUse(function(api) {
     'lib/line_items/line_items.js',
     'lib/bank-accounts/bank-accounts.js',
     'lib/carts/carts.js',
+
   ])
 
   api.add_files([
@@ -77,6 +78,7 @@ Package.onUse(function(api) {
     'lib/carts/carts-publications.js',
     'lib/carts/carts-security.js',
     'lib/carts/carts-machina.js',
+    'lib/bank-accounts/bank-accounts-server.js'
   ], "server")
 
   api.add_files([
@@ -85,7 +87,8 @@ Package.onUse(function(api) {
     'lib/payment_methods/cards/cards_client.js',
     "lib/gateways/test/test_client.js",
     "lib/gateways/stripe/stripe_client.js",
-    'lib/carts/carts_client.js'
+    'lib/carts/carts_client.js',
+    'lib/bank-accounts/bank-accounts-client.js'
   ], "client")
 
   api.imply([
@@ -112,6 +115,7 @@ Package.onTest(function(api) {
     'test/gateways/test-tests.js',
     'test/gateways/stripe-tests.js',
     'test/line-items/line-item-tests.js',
+    'test/bank-accounts/bank-accounts-tests.js'
   ]);
 
   api.addFiles([

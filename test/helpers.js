@@ -13,15 +13,6 @@ testIsRecent = function(time, test) {
   test.isTrue(time.getTime() < after)
 }
 
-keys = {
-  // SpaceCadet
-  // public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
-  // secret: "sk_test_vadeqmFcA1SDxYHoX0KeJWwe",
-  // MA Stripe Tester - marvin@unplugged.im
-  public: "pk_test_cUA2GkVEAZpwSRZk3DilRcTR",
-  secret: "sk_test_0cTn23SpzgOTmM3XBNBgqw7W"
-}
-
 if(Meteor.isServer){
   Meteor.methods({
     'mart/test/add-roles': function(userId, roles){
@@ -39,7 +30,7 @@ if(Meteor.isServer){
 
 testLogin = function(roles, test, callback) {
   let userId = Accounts.createUser({
-    username: 'testuser-' + Random.id(),
+    email: 'testuser-' + Random.id() + "@example.com",
     password: 'password-' + Random.id()
   }, function(error) {
     test.isUndefined(error, 'Unexpected error logging in as user');
