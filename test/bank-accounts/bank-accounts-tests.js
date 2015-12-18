@@ -3,7 +3,6 @@ var bankAccount = {
   accountNumber: "000123456789",
   routingNumber: "110000000",
   recipientType: 'corporation',
-  taxId: "000000000",
   name: "Test Bank Account asf;ddsaf"
 }
 

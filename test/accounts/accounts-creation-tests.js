@@ -16,7 +16,6 @@ Tinytest.addAsync('Accounts - Creation - Shopper by default', function(test, don
 
   function subscribe() {
     var sub = Meteor.subscribe("mart/user-terms-data", function() {
-      console.log(Meteor.user());
       test.equal(Meteor.user().roles,  {"mart-roles-groups-global":["mart-roles-golbal-shopper"]})
       test.isTrue(typeof Meteor.user().termsAcceptedAt === 'number')
       test.isTrue(typeof Meteor.user().termsAcceptedIP === 'string')

@@ -1,12 +1,19 @@
 Tinytest.addAsync('Carts - successful checkout', function(test, done) {
   var cartId, cardId, productId, storefrontId, merchantBankAccountId,
+      bankAccountId,
       contactDetails = {
         contactName: "Marvin Arnold",
         contactEmail: "marvin@unplugged.im",
         contactPhone: "+13016864576",
         contactEntity: "yo mama",
       },
-      price = randomPrice()
+      price = randomPrice(),
+      bankAccount = {
+        accountNumber: "000123456789",
+        routingNumber: "110000000",
+        recipientType: 'corporation',
+        name: "Test Bank Account asf;ddsaf"
+      }
 
   testLogout(test, beginMerchant)
 
@@ -35,16 +42,10 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
 
   function onProductInserted(error, result) {
     productId = result
-    // Mart.BankAccounts.insert({
-    //   name: "we;fsaldfjsdf sdfsdfasdf",
-    //   isDefault: true,
-    //   bankName: String,
-    //   last4: String,
-    //   country: String,
-    //   routingNumber: String,
-    //   accountName: String,
-    //   currency: String
-    // })
+    Mart.createBankAccount('Stripe', bankAccount, function(err, bId) {
+      test.isUndefined(err, 'Unexpected ERROR CREATING BANK ACCOUNT');
+      bankAccountId = bId
+    })
     testLogout(test, beginShopper)
   }
 
@@ -90,10 +91,7 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
       number: 4242424242424242
     }
 
-    Mart.Card.createCard("Stripe", card, {
-      publicKey: keys.public,
-      secretKey: keys.secret,
-    }, onCardCreated)
+    Mart.Card.createCard("Stripe", card, onCardCreated)
   }
 
   var sub6
@@ -165,7 +163,7 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
 
   var sub9
   function makePayment() {
-    Meteor.call("mart/make-payment", cartId, {secretKey: keys.secret}, function(error, result) {
+    Meteor.call("mart/make-payment", cartId, function(error, result) {
       test.isUndefined(error)
 
       // wait a few seconds for processing
@@ -189,7 +187,7 @@ Tinytest.addAsync('Carts - successful checkout', function(test, done) {
 
     testLogout(test, function() {
       testLogin([Mart.ROLES.GLOBAL.ADMIN], test, function() {
-        Meteor.call("mart/process-transfer", cartId, {secretKey: keys.secret}, function(error, result) {
+        Meteor.call("mart/process-transfer", cartId, function(error, result) {
           test.isUndefined(error)
 
           Meteor.setTimeout(function () {

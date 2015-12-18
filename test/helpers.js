@@ -23,18 +23,28 @@ if(Meteor.isServer){
         Roles.addUsersToRoles(userId, roles, Mart.ROLES.GROUPS.GLOBAL);
       }
 
+      Meteor.users.update(Meteor.userId(), {$set: {
+        termsAcceptedIP: "127.0.0.1",
+        termsAcceptedAt: Math.floor(Date.now() / 1000)
+      }})
       return userId
     }
   });
 }
 
+// Note to self, continue to use mart/test/add-roles so that roles can be eailty created
+// if you get errors, here you probably need to sync the test method with the real mart/add-roles method
 testLogin = function(roles, test, callback) {
-  let userId = Mart.Accounts.createUser({
+  let userId = Accounts.createUser({
     email: 'testuser-' + Random.id() + "@example.com",
     password: 'password-' + Random.id()
   }, function(error) {
     test.isUndefined(error, 'Unexpected error logging in as user');
+    Meteor.call("mart/test/add-roles", Meteor.userId(), roles, function(error, userId){
+      test.isUndefined(error, 'Unexpected error adding roles to user');
+      test.isNotNull(Meteor.userId(), 'User ID is undefined after login');
       callback(error, userId)
+    });
   });
 }
 
