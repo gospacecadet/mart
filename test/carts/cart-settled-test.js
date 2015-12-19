@@ -14,14 +14,6 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
       },
       merchants = [{}, {}],
       i = 0
-  // merchant1Id, storefront1Id, product1Id, merchant1ManagedAccountId, merchant1Email,
-  //     price1 = randomPrice(),
-  //     bankAccount1 = {
-  //       accountNumber: "000123456789",
-  //       routingNumber: "110000000",
-  //       recipientType: 'corporation',
-  //       name: "Test Bank Account asf;ddsaf"
-  //     }
 
   // create merchants or start checking out
   begin()
@@ -53,13 +45,14 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
   }
 
   function createProducts(error, storefrontId) {
-    var price1 = randomPrice()
-    var price2 = randomPrice()
+    merchants[i].product1Price = randomPrice()
+    merchants[i].product2Price = randomPrice()
+
     Mart.Products.insert({
       storefrontId: storefrontId,
       name: "asd;skdf sdf",
       description: "a;sldfjkas;dlf",
-      unitPrice: price1,
+      unitPrice: merchants[i].product1Price,
       isPublished: true
     }, function(error, product1Id) {
       test.isUndefined(error, "could not create first product for merchant " + i)
@@ -69,7 +62,7 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
         storefrontId: storefrontId,
         name: "product 2",
         description: "a;sdfasd dsdfd;dlf",
-        unitPrice: price2,
+        unitPrice: merchants[i].product2Price = randomPrice(),
         isPublished: true
       }, function(error, product2Id) {
         test.isUndefined(error, "could not create second product for merchant " + i)
@@ -110,8 +103,9 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
       number: 4242424242424242
     }
 
-    Mart.Card.createCard("Stripe", card, function(error, result) {
+    Mart.Card.createCard("Stripe", card, function(error, cId) {
       test.isUndefined(error, "Could not create credit card")
+      cardId = cId
       addItemsToCart()
     })
   }
@@ -120,41 +114,38 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
     Mart.LineItems.insert({
       productId: merchants[0].product1Id,
       quantity: 1,
+      cartId: "required"
     }, function(error, result) {
       test.isUndefined(error, "Could not add the first item to the cart")
       Mart.LineItems.insert({
         productId: merchants[1].product2Id,
         quantity: 2,
-      }, finish)
+        cartId: "required"
+      }, submitCarts)
     })
   }
 
+  // Line items for different merchants create different carts
+  // Submit both
+  var waitingCartAcceptanceSub
+  function submitCarts(error, response) {
+    Meteor.call("mart/submit-carts", _.extend(checkoutDetails, {
+      cardId: cardId,
+    }), function(error, result) {
+      test.isUndefined(error)
+      waitingCartAcceptanceSub = Meteor.subscribe("mart/carts",
+        [Mart.Cart.STATES.WAITING_CART_ACCEPTANCE],
+        Mart.guestId(), finish)
+    });
+  }
+
   function finish() {
-    // sub6.stop()
-    // sub8.stop()
-    // sub9.stop()
-    // settledSub.stop()
-    // prodSub.stop()
-    // storeSub.stop()
+    waitingCartAcceptanceSub.stop()
     done()
   }
 
 
-  //
-  // var sub8
-  // // 8 - Can add card of owner to cart
-  // function submitCart(error, response) {
-  //
-  //   Meteor.call("mart/submit-cart", {
-  //     CHECKOUT_DETAILS
-  //   }, function(error, result) {
-  //     test.isUndefined(error)
-  //     sub8 = Meteor.subscribe("mart/carts",
-  //       [Mart.Cart.STATES.WAITING_CART_ACCEPTANCE],
-  //       Mart.guestId(), onSubmitCart)
-  //   });
-  // }
-  //
+
   // // Ensure in correct state, correct values, and further updates not allowed
   // function onSubmitCart() {
   //   var cart = Mart.Carts.findOne(cartId)
