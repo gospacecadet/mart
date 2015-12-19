@@ -1,12 +1,11 @@
 // can only add to cart that belongs to current user and is in shopping state (default cart)
 // can only add to product that is published [TODO: and belongs to published store]
 if(Meteor.isClient) {
-Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) {
+Tinytest.addAsync('LineItems - can be created by Shoppers & Guests', function(test, done) {
   var productId, cartId, storefrontId
 
   testLogout(test, createProduct)
 
-  var sub1
   function createProduct() {
     testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function() {
       Mart.Storefronts.insert({
@@ -31,152 +30,70 @@ Tinytest.addAsync('LineItems - can be created by Shopper', function(test, done) 
     })
   }
 
-  var sub2
   function begin() {
     testLogout(test, function() {
-      // Login as shopper
       testLogin([Mart.ROLES.GLOBAL.SHOPPER], test, function() {
-        // Create current cart
-        Meteor.call('mart/cart/findCurrentOrCreate', function(error, result) {
-          sub2 = Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], Mart.guestId(), function() {
-            cartId = Mart.Cart.currentCartId()
-            doTest()
-          });
-        });
+        doShopperTest()
       })
     })
   }
 
-  function doTest() {
+  function doShopperTest() {
     Mart.LineItems.insert({
       productId: productId,
-      cartId: cartId,
       quantity: 20,
-    }, function(error, response) {
+      cartId: "required-for-autovalue"
+    }, function(error, lineId) {
       test.isUndefined(error)
+      var cartSub = Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], Mart.guestId(), function() {
+        var lineItem = Mart.LineItems.findOne(lineId)
 
-      sub1.stop()
-      sub2.stop()
-      done()
-    })
-  }
-})
+        test.isNotUndefined(lineItem)
+        testIsRecent(lineItem.createdAt, test)
+        test.equal(lineItem.unitPriceAtCheckout, 4523)
+        test.equal(lineItem.productId, productId)
+        test.equal(lineItem.quantity, 20)
+        test.equal(typeof lineItem.cartId, "string")
+        test.equal(lineItem.productNameAtCheckout, "asd;skdf sdf")
+        test.equal(lineItem.storefrontNameAtCheckout, "testtest")
+        test.equal(lineItem.subtotal(), 4523 * 20)
 
-Tinytest.addAsync('LineItems - can be created by guest', function(test, done) {
-  var productId, cartId, storefrontId
-
-  testLogout(test, createProduct)
-
-  var sub1
-  function createProduct() {
-    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function() {
-      Mart.Storefronts.insert({
-        name: "testtest",
-        description: "asasdfsadf dasfasdd",
-        isPublished: true,
-      }, function(error, sId) {
-        storefrontId = sId
-        sub1 = Meteor.subscribe("mart/storefront", storefrontId, function() {
-          Mart.Products.insert({
-            storefrontId: storefrontId,
-            name: "asd;skdf sdf",
-            description: "a;sldfjkas;dlf",
-            unitPrice: 4523,
-            isPublished: true
-          }, function(error, pId) {
-            productId = pId
-            begin()
-          })
-        })
+        cartSub.stop()
+        testLogout(test, doGuestTest)
       })
     })
   }
 
-  var sub2
-  function begin() {
-    testLogout(test, function() {
-      // Create current cart
-      Meteor.call('mart/cart/findCurrentOrCreate', Mart.guestId(), function(error, result) {
-        sub2 = Meteor.subscribe("mart/carts",
-          [Mart.Cart.STATES.SHOPPING],
-          Mart.guestId(),
-          function() {
-            cartId = Mart.Cart.currentCartId()
-            doTest()
-        });
-      });
-    })
-  }
-
-  function doTest() {
+  function doGuestTest() {
     Mart.LineItems.insert({
       productId: productId,
-      cartId: cartId,
-      quantity: 20,
-    }, function(error, response) {
+      quantity: 13,
+      cartId: "required-for-autovalue",
+      guestId: Mart.guestId()
+    }, function(error, lineId) {
       test.isUndefined(error)
+      var cartSub = Meteor.subscribe("mart/carts", [Mart.Cart.STATES.SHOPPING], Mart.guestId(), function() {
+        var lineItem = Mart.LineItems.findOne(lineId)
 
-      sub1.stop()
-      sub2.stop()
-      done()
+        test.isNotUndefined(lineItem)
+        testIsRecent(lineItem.createdAt, test)
+        test.equal(lineItem.unitPriceAtCheckout, 4523)
+        test.equal(lineItem.productId, productId)
+        test.equal(lineItem.quantity, 13)
+        test.equal(typeof lineItem.cartId, "string")
+        test.equal(lineItem.productNameAtCheckout, "asd;skdf sdf")
+        test.equal(lineItem.storefrontNameAtCheckout, "testtest")
+        test.equal(lineItem.subtotal(), 4523 * 13)
+
+        cartSub.stop()
+        done()
+      })
     })
   }
 })
-
 }
 
-if(Meteor.isServer) {
-  var cartId = Mart.Carts.insert({userId: "testId"}, {validate: false}) // can't login users easily
-  var cart = Mart.Carts.findOne(cartId)
-
-  var storefrontId = Mart.Storefronts.insert({
-    name: "Test Storefront",
-    description: "A test storefront description",
-    isActive: true,
-    userId: "testId"
-  }, {validate: false})
-  var storefront = Mart.Storefronts.findOne(storefrontId)
-
-  var productId = Mart.Products.insert({
-    name: "test product",
-    description: "a test description",
-    unitPrice: 523,
-    storefrontId: storefrontId,
-    isPublished: true
-  })
-
-  Tinytest.add('LineItems - remove', function (test) {
-    var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
-    var li = Mart.LineItems.findOne(lid)
-
-    Mart.LineItem.remove(lid)
-
-    test.isUndefined(Mart.LineItems.findOne(lid))
-  })
-
-  Tinytest.add('LineItems - sets CreatedAt', function (test) {
-    var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
-    var li = Mart.LineItems.findOne(lid)
-    var now = new Date().getTime()
-    test.isTrue(li.createdAt > now - 100)
-    test.isTrue(li.createdAt < now + 100)
-  })
-
-  Tinytest.add('LineItems - add product/shop attributes onCreate', function (test) {
-    var lid = Mart.LineItems.insert({productId: productId, quantity: 2, cartId: cartId})
-    var li = Mart.LineItems.findOne(lid)
-
-    test.equal(li.unitPriceAtCheckout, 523)
-    test.equal(li.productId, productId)
-    test.equal(li.quantity, 2)
-    test.equal(li.cartId, cartId)
-    test.equal(li.productName, "test product")
-    test.equal(li.storefrontName, "Test Storefront")
-  })
-
-  Tinytest.add('LineItems - has a subtotal', function (test) {
-    var lid = Mart.LineItems.insert({productId: productId, quantity: 3, cartId: cartId})
-
-    test.equal(Mart.LineItems.findOne(lid).subtotal(), 523 * 3)
-  })
-}
+// Tinytest.addAsync('LineItems - can be created by guest', function(test, done) {
+//   done()
+// })
+//

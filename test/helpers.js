@@ -52,15 +52,16 @@ if(Meteor.isServer){
 // Note to self, continue to use mart/test/add-roles so that roles can be eailty created
 // if you get errors, here you probably need to sync the test method with the real mart/add-roles method
 testLogin = function(roles, test, callback) {
+  let email = 'testuser-' + Random.id() + "@example.com"
   let userId = Accounts.createUser({
-    email: 'testuser-' + Random.id() + "@example.com",
-    password: 'password-' + Random.id()
+    email: email,
+    password: 'traphouse'
   }, function(error) {
     test.isUndefined(error, 'Unexpected error logging in as user');
     Meteor.call("mart/test/add-roles", Meteor.userId(), roles, function(error, userId){
       test.isUndefined(error, 'Unexpected error adding roles to user');
       test.isNotNull(Meteor.userId(), 'User ID is undefined after login');
-      callback(error, userId)
+      callback(error, email)
     });
   });
 }

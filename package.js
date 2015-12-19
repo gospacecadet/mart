@@ -74,7 +74,6 @@ Package.onUse(function(api) {
     'lib/gateways/gateways_server.js',
     "lib/gateways/stripe/stripe_server.js",
     'lib/line_items/line_items_server.js',
-    'lib/carts/carts_server.js',
     'lib/carts/carts-publications.js',
     'lib/carts/carts-security.js',
     'lib/carts/carts-machina.js',
