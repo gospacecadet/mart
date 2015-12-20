@@ -126,7 +126,7 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront [Admin] can subs
   }
 
   function onUserLoggedIn(error, userId) {
-    merchantId = userId
+    merchantId = Meteor.userId()
     Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
   }
 

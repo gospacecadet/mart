@@ -13,76 +13,80 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
         name: "Test Bank Account asf;ddsaf"
       },
       merchants = [{}, {}],
-      i = 0
+      NUM_MERCHANTS = 2
 
   // create merchants or start checking out
-  begin()
-  function begin() {
-    if(i < 2) {
-      testLogout(test, createMerchant)
+  begin(0)
+  function begin(index) {
+    if(index < NUM_MERCHANTS) {
+      testLogout(test, function() {
+        createMerchant(index)
+      })
     } else {
       testLogout(test, beginShopper)
     }
   }
 
-  function createMerchant() {
+  function createMerchant(index) {
     testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function(error, email) {
-      merchants[i].email = email
-      merchants[i]._id = Meteor.userId()
-      createStorefronts()
+      merchants[index].email = email
+      merchants[index]._id = Meteor.userId()
+      createStorefronts(index)
     })
   }
 
-  function createStorefronts() {
+  // one storefront per merchant
+  function createStorefronts(index) {
     Mart.Storefronts.insert({
       name: "testtest",
       description: "asasdfsadf dasfasdd",
       isPublished: true,
     }, function(error, storefrontId) {
-      test.isUndefined(error, "Could not create storefront for merchant " + i)
-      createProducts(error, storefrontId)
+      test.isUndefined(error, "Could not create storefront for merchant " + index)
+      createProducts(error, storefrontId, index)
     })
   }
 
-  function createProducts(error, storefrontId) {
-    merchants[i].product1Price = randomPrice()
-    merchants[i].product2Price = randomPrice()
+  // two products per storefront
+  function createProducts(error, storefrontId, index) {
+    merchants[index].product1Price = randomPrice()
+    merchants[index].product2Price = randomPrice()
 
     Mart.Products.insert({
       storefrontId: storefrontId,
       name: "asd;skdf sdf",
       description: "a;sldfjkas;dlf",
-      unitPrice: merchants[i].product1Price,
+      unitPrice: merchants[index].product1Price,
       isPublished: true
     }, function(error, product1Id) {
-      test.isUndefined(error, "could not create first product for merchant " + i)
-      merchants[i].product1Id = product1Id
+      test.isUndefined(error, "could not create first product for merchant " + index)
+      merchants[index].product1Id = product1Id
 
       Mart.Products.insert({
         storefrontId: storefrontId,
         name: "product 2",
         description: "a;sdfasd dsdfd;dlf",
-        unitPrice: merchants[i].product2Price = randomPrice(),
+        unitPrice: merchants[index].product2Price,
         isPublished: true
       }, function(error, product2Id) {
-        test.isUndefined(error, "could not create second product for merchant " + i)
-        merchants[i].product2Id = product2Id
-        createBankAccount()
+        test.isUndefined(error, "could not create second product for merchant " + index)
+        merchants[index].product2Id = product2Id
+        createBankAccount(index)
       })
     })
   }
 
-  function createBankAccount() {
+  function createBankAccount(index) {
     Mart.createBankAccount('Stripe', bankAccount, function(err, bId) {
       test.isUndefined(err, 'Unexpected ERROR CREATING BANK ACCOUNT');
-      merchants[i].bankAccountId = bId
-      merchantFinished()
+      merchants[index].bankAccountId = bId
+      merchantFinished(index)
     })
   }
 
-  function merchantFinished() {
-    i++
-    begin()
+  function merchantFinished(index) {
+    index++
+    begin(index)
   }
 
   // Log shopper in
@@ -112,7 +116,7 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
 
   function addItemsToCart() {
     Mart.LineItems.insert({
-      productId: merchants[0].product1Id,
+      productId: merchants[0].product2Id,
       quantity: 1,
       cartId: "required"
     }, function(error, result) {
@@ -135,93 +139,127 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
       test.isUndefined(error)
       waitingCartAcceptanceSub = Meteor.subscribe("mart/carts",
         [Mart.Cart.STATES.WAITING_CART_ACCEPTANCE],
-        Mart.guestId(), finish)
+        Mart.guestId(), checkCartsWaitingAcceptance)
     });
   }
 
-  function finish() {
-    waitingCartAcceptanceSub.stop()
-    done()
+  function checkCartsWaitingAcceptance() {
+    test.equal(Mart.Carts.find().count(), NUM_MERCHANTS)
+    checkCartWaitingAcceptance(0)
   }
 
+  function checkCartWaitingAcceptance(index) {
+    if(index < NUM_MERCHANTS) {
+      var cart = Mart.Carts.findOne({merchantId: merchants[index]._id})
+      merchants[index].cartId = cart._id
+      test.equal(cart.state, Mart.Cart.STATES.WAITING_CART_ACCEPTANCE)
+      test.equal(cart.subtotal(), (1+index) * merchants[index].product2Price, "Did not correctly calculate cart subtotal")
+      test.equal(cart.connectionFee, Math.floor(0.2 * cart.subtotal()), "Bad connection fee")
+      test.equal(cart.merchantCut, Math.ceil((1 - 0.2) * cart.subtotal()), "Bad merchant cut")
+      test.equal(cart.connectionFee + cart.merchantCut, cart.subtotal(), "Connection fee + merchant cut = cart subtotal")
 
+      test.equal(cart.serviceFee, Math.floor(0.3 * cart.subtotal()), "Bad service fee")
+      test.equal(cart.preTaxTotal(), cart.subtotal() + cart.serviceFee, "Bad pretax total")
 
-  // // Ensure in correct state, correct values, and further updates not allowed
-  // function onSubmitCart() {
-  //   var cart = Mart.Carts.findOne(cartId)
-  //   test.equal(cart.state, Mart.Cart.STATES.WAITING_CART_ACCEPTANCE)
-  //   test.equal(cart.subtotal(), 2 * price)
-  //   test.equal(cart.connectionFee, Math.floor(0.2 * cart.subtotal()))
-  //   test.equal(cart.merchantCut, Math.ceil((1 - 0.2) * cart.subtotal()))
-  //   test.equal(cart.connectionFee + cart.merchantCut, cart.subtotal())
-  //
-  //   test.equal(cart.serviceFee, Math.floor(0.3 * cart.subtotal()))
-  //   test.equal(cart.preTaxTotal(), cart.subtotal() + cart.serviceFee)
-  //
-  //   test.equal(cart.tax, Math.floor(cart.preTaxTotal() * 0.1))
-  //
-  //   test.equal(cart.total(), cart.preTaxTotal() + cart.tax)
-  //   testLogout(test, function() {
-  //     Meteor.loginWithPassword(merchantEmail, 'traphouse', function() {
-  //       makePayment()
-  //     })
-  //   })
-  // }
-  //
-  // var sub9
-  // function makePayment() {
-  //   Meteor.call("mart/make-payment", cartId, function(error, result) {
-  //     test.isUndefined(error)
-  //
-  //     // wait a few seconds for processing
-  //     Meteor.setTimeout(function () {
-  //       sub9 = Meteor.subscribe("mart/carts",
-  //         [Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE],
-  //         Mart.guestId(),
-  //         onDonePayment)
-  //     }, 2 * 1000);
-  //   });
-  // }
-  //
-  // var settledSub
-  // function onDonePayment() {
-  //   var cart = Mart.Carts.findOne(cartId)
-  //   test.equal(cart.state, Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE)
-  //   testIsRecent(cart.paymentAt, test)
-  //   testIsRecent(cart.cartAcceptedAt, test)
-  //   test.equal(typeof cart.paymentConfirmation, 'string')
-  //   test.equal(cart.paymentAmount, cart.total())
-  //
-  //   testLogout(test, function() {
-  //     testLogin([Mart.ROLES.GLOBAL.ADMIN], test, function() {
-  //       Meteor.call("mart/process-transfer", cartId, function(error, result) {
-  //         test.isUndefined(error)
-  //
-  //         Meteor.setTimeout(function () {
-  //           settledSub = Meteor.subscribe("mart/carts",
-  //             [Mart.Cart.STATES.SETTLED],
-  //             shopperId,
-  //             onDoneTransfer)
-  //         }, 3 * 1000);
-  //       });
-  //     })
-  //   })
-  // }
-  //
-  // function onDoneTransfer() {
-  //   var cart = Mart.Carts.findOne(cartId)
-  //   test.isNotUndefined(cart)
-  //   test.equal(cart.state, Mart.Cart.STATES.SETTLED)
-  //   testIsRecent(cart.transferredAt, test)
-  //   testIsRecent(cart.transferAcceptedAt, test)
-  //   testIsRecent(cart.settledAt, test)
-  //   test.equal(cart.transferAcceptedByAdminId, Meteor.userId())
-  //   test.equal(typeof cart.transferConfirmation, 'string')
-  //   test.equal(cart.transferAmount, cart.merchantCut)
-  //   test.equal(typeof cart.transferredToManagedAccountId, 'string')
-  //
-  //   finish()
-  // }
-  //
+      test.equal(cart.tax, Math.floor(cart.preTaxTotal() * 0.1), "Bad tax amount")
 
+      test.equal(cart.total(), cart.preTaxTotal() + cart.tax, "Bad total")
+
+      index++
+      checkCartWaitingAcceptance(index)
+    } else {
+      testLogout(test, makePayments)
+    }
+  }
+
+  function makePayments() {
+    makePayment(0)
+  }
+
+  var waitingTransferAcceptance
+  function makePayment(index) {
+    if(index < NUM_MERCHANTS) {
+      Meteor.loginWithPassword(merchants[index].email, 'traphouse', function() {
+        Meteor.call("mart/make-payment", merchants[index].cartId, function(error, result) {
+          test.isUndefined(error)
+
+          // wait a few seconds for processing
+          Meteor.setTimeout(function () {
+            waitingTransferAcceptance = Meteor.subscribe("mart/carts",
+              [Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE],
+              Mart.guestId(),
+              function() {
+                checkCartWaitingTransferAcceptance(index)
+              })
+          }, 2 * 1000);
+        })
+      })
+    } else {
+      processTransfers()
+    }
+
+  }
+
+  function checkCartWaitingTransferAcceptance(index) {
+    var cart = Mart.Carts.findOne(merchants[index].cartId)
+    test.equal(cart.state, Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE)
+    testIsRecent(cart.paymentAt, test)
+    testIsRecent(cart.cartAcceptedAt, test)
+    test.equal(typeof cart.paymentConfirmation, 'string')
+    test.equal(cart.paymentAmount, cart.total())
+
+    testLogout(test, function() {
+      index++
+      makePayment(index)
+    })
+  }
+
+  function processTransfers() {
+    processTransfer(0)
+  }
+
+  function processTransfer(index) {
+    if(index < NUM_MERCHANTS) {
+      testLogout(test, function() {
+        testLogin([Mart.ROLES.GLOBAL.ADMIN], test, function() {
+          Meteor.call("mart/process-transfer", merchants[index].cartId, function(error, result) {
+            test.isUndefined(error)
+
+            Meteor.setTimeout(function () {
+              settledSub = Meteor.subscribe("mart/carts",
+                [Mart.Cart.STATES.SETTLED],
+                shopperId,
+                function() {
+                  checkTransferResults(index)
+                })
+            }, 3 * 1000);
+          });
+        })
+      })
+    } else {
+      finish()
+    }
+  }
+
+  function checkTransferResults(index) {
+    var cart = Mart.Carts.findOne(merchants[index].cartId)
+    test.isNotUndefined(cart)
+    test.equal(cart.state, Mart.Cart.STATES.SETTLED)
+    testIsRecent(cart.transferredAt, test)
+    testIsRecent(cart.transferAcceptedAt, test)
+    testIsRecent(cart.settledAt, test)
+    test.equal(cart.transferAcceptedByAdminId, Meteor.userId())
+    test.equal(typeof cart.transferConfirmation, 'string')
+    test.equal(cart.transferAmount, cart.merchantCut)
+    test.equal(typeof cart.transferredToManagedAccountId, 'string')
+
+    index++
+    processTransfer(index)
+  }
+  
+  function finish() {
+    waitingCartAcceptanceSub.stop()
+    waitingTransferAcceptance.stop()
+    done()
+  }
 })
