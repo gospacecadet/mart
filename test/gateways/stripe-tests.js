@@ -78,4 +78,22 @@ if(Meteor.isClient) {
       done();
     }
   })
+
+  Tinytest.addAsync('Gateways - Stripe - guests create-card token only', function(test, done) {
+    var expectedCard, userId, cardToken
+
+    testLogout(test, function() {
+      createCard()
+    })
+
+    function createCard() {
+      userId = Meteor.userId()
+      Mart.Card.createCard("Stripe", card, function(err, token) {
+        test.isUndefined(err, 'Unexpected error CREATING CARD:');
+        test.equal(typeof token, 'string')
+
+        done()
+      })
+    }
+  })
 }

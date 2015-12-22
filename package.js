@@ -80,6 +80,7 @@ Package.onUse(function(api) {
     'lib/bank-accounts/bank-accounts-server.js',
     'lib/gateways/stripe/stripe-customers.js',
     'lib/gateways/stripe/stripe-managed-accounts.js',
+    'lib/carts/carts-methods.js'
   ], "server")
 
   api.add_files([
