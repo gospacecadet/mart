@@ -133,9 +133,5 @@ Package.onTest(function(api) {
     'test/products/products-security-tests.js',
     'test/carts/guest-cart-settled-test.js',
     'test/carts/cart-settled-test.js',
-    'test/carts/cart-cancelled-by-admin-test.js',
-    'test/carts/cart-cancelled-by-payment-test.js',
-    'test/carts/cart-cancelled-by-merchant-test.js',
-    'test/carts/cart-fail-transfer-test.js',
   ], "client");
 });

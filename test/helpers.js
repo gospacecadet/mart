@@ -23,8 +23,8 @@ randomPrice = function() {
 
 testIsRecent = function(time, test) {
   var now = new Date().getTime()
-  var before = now - (5*1000)
-  var after = now + (5*1000)
+  var before = now - (60*1000)
+  var after = now + (60*1000)
 
   test.isTrue(time.getTime() > before)
   test.isTrue(time.getTime() < after)

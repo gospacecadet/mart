@@ -226,9 +226,9 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
             test.isUndefined(error)
 
             Meteor.setTimeout(function () {
-              settledSub = Meteor.subscribe("mart/carts",
+              merchants[index].settledSub = Meteor.subscribe("mart/carts",
                 [Mart.Cart.STATES.SETTLED],
-                shopperId,
+                Mart.guestId(),
                 function() {
                   checkTransferResults(index)
                 })
@@ -244,7 +244,7 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
   function checkTransferResults(index) {
     var cart = Mart.Carts.findOne(merchants[index].cartId)
     test.isNotUndefined(cart)
-    test.equal(cart.state, Mart.Cart.STATES.SETTLED)
+    test.equal(cart.state, Mart.Cart.STATES.SETTLED, "Cart " + index + " not in SETTLED state")
     testIsRecent(cart.transferredAt, test)
     testIsRecent(cart.transferAcceptedAt, test)
     testIsRecent(cart.settledAt, test)
@@ -258,9 +258,8 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
   }
 
   function finish() {
-    settledSub.stop()
-
     for(let i=0; i < NUM_MERCHANTS; i++) {
+      merchants[i].settledSub.stop()
       merchants[i].waitingTransferAcceptanceSub.stop()
     }
 

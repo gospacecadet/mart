@@ -261,7 +261,7 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
 
   function checkTransferResults(index) {
     var cart = Mart.Carts.findOne(merchants[index].cartId)
-    test.isNotUndefined(cart)
+    test.isNotUndefined(cart, "cart " + index + " undefined in " + checkTransferResults)
     test.equal(cart.state, Mart.Cart.STATES.SETTLED)
     testIsRecent(cart.transferredAt, test)
     testIsRecent(cart.transferAcceptedAt, test)
@@ -285,6 +285,6 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
       test.equal(Mart.Carts.find().count(), 0) // ensure cleaned up
       done()
     }, 1 * 1000)
-    
+
   }
 })
