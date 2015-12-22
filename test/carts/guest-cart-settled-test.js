@@ -113,7 +113,6 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
     })
   }
 
-  var cartsSub
   var card = {
     nameOnCard: "Marvin Arnold",
     expMonth: 10,
@@ -122,6 +121,7 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
     number: 4242424242424242
   }
   var carts
+  var cartsSub
   function getCarts() {
     cartsSub = Meteor.subscribe("mart/carts",
       [Mart.Cart.STATES.SHOPPING],
@@ -141,6 +141,7 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
         createCard(index)
       })
     } else {
+      cartsSub.stop()
       submitCarts()
     }
   }
@@ -185,6 +186,7 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
       index++
       checkCartWaitingAcceptance(index)
     } else {
+      // waitingCartAcceptanceSub.stop()
       makePayments()
     }
   }
@@ -193,7 +195,6 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
     makePayment(0)
   }
 
-  var waitingTransferAcceptance
   function makePayment(index) {
     if(index < NUM_MERCHANTS) {
       Meteor.loginWithPassword(merchants[index].email, 'traphouse', function() {
@@ -202,7 +203,7 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
 
           // wait a few seconds for processing
           Meteor.setTimeout(function () {
-            waitingTransferAcceptance = Meteor.subscribe("mart/carts",
+            merchants[index].waitingTransferAcceptanceSub = Meteor.subscribe("mart/carts",
               [Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE],
               Mart.guestId(),
               function() {
@@ -243,7 +244,7 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
             test.isUndefined(error)
 
             Meteor.setTimeout(function () {
-              settledSub = Meteor.subscribe("mart/carts",
+              merchants[index].settledSub = Meteor.subscribe("mart/carts",
                 [Mart.Cart.STATES.SETTLED],
                 shopperId,
                 function() {
@@ -275,9 +276,15 @@ Tinytest.addAsync('Carts - Machina - Guest SETTLED', function(test, done) {
   }
 
   function finish() {
-    waitingCartAcceptanceSub.stop()
-    waitingTransferAcceptance.stop()
-    cartsSub.stop()
-    done()
+    for(let i=0; i < NUM_MERCHANTS; i++) {
+      merchants[i].settledSub.stop()
+      merchants[i].waitingTransferAcceptanceSub.stop()
+    }
+
+    Meteor.setTimeout(function () { // give time to clean up
+      test.equal(Mart.Carts.find().count(), 0) // ensure cleaned up
+      done()
+    }, 1 * 1000)
+    
   }
 })

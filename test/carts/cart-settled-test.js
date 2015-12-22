@@ -144,7 +144,7 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
   }
 
   function checkCartsWaitingAcceptance() {
-    test.equal(Mart.Carts.find().count(), NUM_MERCHANTS)
+    test.equal(Mart.Carts.find().count(), NUM_MERCHANTS, "Wrong number of carts available")
     checkCartWaitingAcceptance(0)
   }
 
@@ -168,6 +168,7 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
       index++
       checkCartWaitingAcceptance(index)
     } else {
+      waitingCartAcceptanceSub.stop()
       testLogout(test, makePayments)
     }
   }
@@ -176,7 +177,6 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
     makePayment(0)
   }
 
-  var waitingTransferAcceptance
   function makePayment(index) {
     if(index < NUM_MERCHANTS) {
       Meteor.loginWithPassword(merchants[index].email, 'traphouse', function() {
@@ -185,7 +185,7 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
 
           // wait a few seconds for processing
           Meteor.setTimeout(function () {
-            waitingTransferAcceptance = Meteor.subscribe("mart/carts",
+            merchants[index].waitingTransferAcceptanceSub = Meteor.subscribe("mart/carts",
               [Mart.Cart.STATES.WAITING_TRANSFER_ACCEPTANCE],
               Mart.guestId(),
               function() {
@@ -256,10 +256,18 @@ Tinytest.addAsync('Carts - Machina - SETTLED', function(test, done) {
     index++
     processTransfer(index)
   }
-  
+
   function finish() {
-    waitingCartAcceptanceSub.stop()
-    waitingTransferAcceptance.stop()
-    done()
+    settledSub.stop()
+
+    for(let i=0; i < NUM_MERCHANTS; i++) {
+      merchants[i].waitingTransferAcceptanceSub.stop()
+    }
+
+    Meteor.setTimeout(function () { // give time to clean up
+      test.equal(Mart.Carts.find().count(), 0) // ensure cleaned up
+      done()
+    }, 1 * 1000)
+
   }
 })
