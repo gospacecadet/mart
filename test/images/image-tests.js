@@ -93,3 +93,53 @@ var dataURLtoBlob = function(dataurl) {
   }
   return new Blob([u8arr], {type:mime});
 }
+
+Tinytest.addAsync('Image - Compress', function(test, done) {
+  var originalImg, resizedImg, originalBlob, resizedBlob
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", 'https://scontent-dfw1-1.xx.fbcdn.net/hphotos-xpt1/v/t1.0-9/12346343_871489722946736_5400293110848611387_n.jpg?oh=420c4ce953952c93b6d282898dd1061d&oe=56DBA4F4', true); // true for asynchronous
+  xmlHttp.responseType = 'blob';
+  xmlHttp.onload = originalImgRetrieved
+  xmlHttp.send();
+
+  function originalImgRetrieved(error) {
+    if (this.status == 200) {
+      originalBlob = new Blob([this.response], {type: 'image/jpg'})
+      originalBlob.name = 'blob.jpg'
+
+      originalImg = document.createElement('img');
+      // originalImg.style = 'display: none;'
+      originalImg.src = window.URL.createObjectURL(originalBlob);
+      originalImg.onload = onOriginalImgLoaded
+
+      document.body.appendChild(originalImg)
+    }
+  }
+
+  function onOriginalImgLoaded() {
+    Resizer.resize(originalBlob, {}, function(err, canvas) {
+      resizedBlob = canvas.toBlob()
+      resizedImg = document.createElement('img');
+      // resizedImg.style = 'display: none;'
+      resizedImg.src = window.URL.createObjectURL(canvas);
+      resizedImg.onload = onResizedImgLoaded
+
+      document.body.appendChild(resizedImg)
+    })
+  }
+
+  function onResizedImgLoaded() {
+    test.equal(resizedImg.height, originalImg.height, "Resized height different than original")
+    test.equal(resizedImg.width, originalImg.width, "Resized width different than original")
+
+    Resizer.resize(resizedBlob, {quality: 0.3}, function(err, canvas) {
+      var finalBlob = canvas.toBlob()
+      console.log(resizedBlob.size);
+      console.log(finalBlob.size);
+      test.isTrue(resizedBlob.size > finalBlob.size, "Resized image does not appear compressed.")
+
+      done()
+    })
+
+  }
+})

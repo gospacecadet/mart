@@ -68,6 +68,7 @@ Package.onUse(function(api) {
     'lib/storefront/server/storefronts-publications.js',
     'lib/storefront/server/storefronts-security.js',
     'lib/accounts/accounts-server.js',
+    'lib/accounts/accounts-publications.js',
     "lib/payment_methods/cards/cards_server.js",
     'lib/products/products-publications.js',
     'lib/products/products-security.js',
