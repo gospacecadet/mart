@@ -95,3 +95,11 @@ createTestStorefront = function(test, callback) {
     })
   })
 }
+
+testError = function(error, test, message) {
+  if(error) {
+    console.log(error);
+  }
+
+  test.isUndefined(error, message)
+}
