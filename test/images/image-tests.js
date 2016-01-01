@@ -1,5 +1,5 @@
-Tinytest.addAsync("Images - Storefronts - Can add images", function(test, done) {
-  var storefrontId
+Tinytest.addAsync("Images - Storefronts - Can add images with merchant", function(test, done) {
+  var storefrontId, storefrontSub
 
   testLogout(test, createMerchant)
 
@@ -23,7 +23,10 @@ Tinytest.addAsync("Images - Storefronts - Can add images", function(test, done) 
     }, function(error, id) {
       testError(error, test, "Could not create storefront for merchant")
       storefrontId = id
-      addImage()
+
+      storefrontSub = Meteor.subscribe('mart/storefront', storefrontId, function() {
+        addImage()
+      })
     })
   }
 
@@ -38,7 +41,17 @@ Tinytest.addAsync("Images - Storefronts - Can add images", function(test, done) 
     }, function(error, id) {
       testError(error, test, "Could not add image to storefront")
 
-      done()
+      Mart.Images.update(id, {$set: {
+        originalUrl: "123",
+        optimizedUrl: "456",
+        thumbnailUrl: "789"
+      }}, function(error, id) {
+        testError(error, test, "Could not add image to storefront")
+        test.equal(Mart.Images.find().count(), 1, "Wrong number of images returned")
+
+        storefrontSub.stop()
+        done()
+      })
     })
   }
 })
