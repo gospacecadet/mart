@@ -52,21 +52,22 @@ Package.onUse(function(api) {
     "lib/mart.js",
     'lib/accounts/accounts.js',
     'lib/security-helpers.js',
-    'lib/storefront/storefronts.js',
+    'lib/storefronts/storefronts.js',
     "lib/images/images.js",
     'lib/gateways/gateways.js',
     'lib/payment_methods/cards/cards.js',
     "lib/gateways/stripe/stripe.js",
     'lib/gateways/test/test.js',
     'lib/products/products.js',
+    'lib/prices/prices.js',
     'lib/line_items/line_items.js',
     'lib/bank-accounts/bank-accounts.js',
     'lib/carts/carts.js',
   ])
 
   api.add_files([
-    'lib/storefront/server/storefronts-publications.js',
-    'lib/storefront/server/storefronts-security.js',
+    'lib/storefronts/server/storefronts-publications.js',
+    'lib/storefronts/server/storefronts-security.js',
     'lib/accounts/accounts-server.js',
     'lib/accounts/accounts-publications.js',
     "lib/payment_methods/cards/cards_server.js",
@@ -102,6 +103,11 @@ Package.onUse(function(api) {
     'ongoworks:security@1.3.0',
   ])
 
+  api.imply([
+    'accounts-base',
+    'accounts-password'
+  ])
+
   api.export("Mart")
 });
 
@@ -119,6 +125,8 @@ Package.onTest(function(api) {
     'test/helpers.js',
     'test/gateways/test-tests.js',
     'test/gateways/stripe-tests.js',
+    'test/prices/prices-tests.js',
+    'test/products/products-tests.js',
     'test/line-items/line-item-tests.js',
     'test/bank-accounts/bank-accounts-tests.js'
   ]);
