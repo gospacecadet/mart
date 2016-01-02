@@ -75,24 +75,35 @@ testLogout = function(test, callback) {
 }
 
 // returns [storefrontId, merchantId]
-createTestStorefront = function(test, callback) {
-  testLogout(test, function(error) {
-    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function(error, merchantId) {
-      Mart.Storefronts.insert({
-        name: "some Storefront",
-        description: "woot there it is",
-        isPublished: true,
-        isDeleted: false
-      }, function(error, storefrontId) {
-        testLogout(test, function(error) {
-          test.isUndefined(error, "Could not create test storefront")
-          test.isTrue(typeof storefrontId === "string")
-          test.isTrue(typeof merchantId === "string")
+createTestStorefront = function(storefront, test, callback) {
+  Mart.Storefronts.insert(_.defaults(storefront, {
+    name: "some Storefront",
+    description: "woot there it is",
+    address: "123 Fake St",
+    city: "New Orleans",
+    state: "LA",
+    zip: "70113",
+    isPublished: true,
+    isDeleted: false
+  }), function(error, storefrontId) {
+    testError(error, test, "Could not create test storefront")
+    test.isTrue(typeof storefrontId === "string")
 
-          callback(error, {storefrontId: storefrontId, merchantId: merchantId})
-        })
-      })
-    })
+    callback(error, storefrontId)
+  })
+}
+
+createTestProduct = function(product, test, callback) {
+  Mart.Products.insert(_.defaults(product, {
+    name: "asd;skdf sdf",
+    description: "a;sldfjkas;dlf",
+    isPublished: true,
+    isDeleted: false
+  }), function(error, productId) {
+    testError(error, test, "Could not create test product")
+    test.isTrue(typeof productId === "string")
+
+    callback(error, productId)
   })
 }
 
