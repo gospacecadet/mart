@@ -15,11 +15,11 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefronts no user require
   }
   var insertedStoreId
 
-  createTestStorefront(test, onLoggedOut)
+  quickStorefront(expectedStorefront, test, examineStorefront)
 
   var sub1
-  function onLoggedOut(error, response) {
-    insertedStoreId = response.storefrontId
+  function examineStorefront(error, response) {
+    insertedStoreId = response
     sub1 = Meteor.subscribe("mart/storefronts", function() {
       let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
       test.isNotUndefined(createdStorefront)
@@ -39,18 +39,14 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront no user required
     name: "some Storefront",
     description: "woot there it is",
     isPublished: true,
-    isDeleted: false
+    isDeleted: false,
   }
   var insertedStoreId
 
-  testLogout(test, begin)
-
-  function begin() {
-    createTestStorefront(test, onLoggedOut)
-  }
+  quickStorefront(expectedStorefront, test, onLoggedOut)
 
   function onLoggedOut(error, response) {
-    insertedStoreId = response.storefrontId
+    insertedStoreId = response
     var sub = Meteor.subscribe("mart/storefront", insertedStoreId, function() {
       let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
       test.isNotUndefined(createdStorefront)
@@ -65,147 +61,54 @@ Tinytest.addAsync('Storefronts - Publications - mart/storefront no user required
   }
 })
 
-Tinytest.addAsync('Storefronts - Publications - mart/storefront [Merchant] can subscribe to their owned & undeleted Storefronts', function(test, done) {
-  var expectedStorefront = {
-    name: "some Storefront",
-    description: "woot there it is",
-    isPublished: false,
-  }
-  var insertedStoreId
-  testLogout(test, begin)
+_.each([
+  Mart.ROLES.GLOBAL.MERCHANT,
+  Mart.ROLES.GLOBAL.REP,
+  Mart.ROLES.GLOBAL.ADMIN
+], function(role) {
+  Tinytest.addAsync('Storefronts - Publications - mart/storefront ' + role + ' can subscribe to their owned & undeleted Storefronts', function(test, done) {
+    var expectedStorefront = {
+      name: "some Storefront",
+      description: "woot there it is",
+      isPublished: false,
+      userId: "fakeId" // This userId will only be used if Admin or Rep
+    }
+    var insertedStoreId
+    testLogout(test, begin)
 
-  function begin() {
-    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onUserLoggedIn)
-  }
+    function begin() {
+      testLogin(role, test, onUserLoggedIn)
+    }
 
-  function onUserLoggedIn(error) {
-    Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
-  }
+    function onUserLoggedIn(error) {
+      createTestStorefront(expectedStorefront, test, onStorefrontInserted)
+    }
 
-  function onStorefrontInserted(error, storefrontId) {
-    test.isUndefined(error, "Could not insert a new Storefront")
-    test.isTrue(typeof storefrontId === "string")
-    insertedStoreId = storefrontId
+    function onStorefrontInserted(error, storefrontId) {
+      insertedStoreId = storefrontId
 
-    Meteor.subscribe("mart/storefront", insertedStoreId, function() {
-      let createdStorefront = Mart.Storefronts.findOne(storefrontId)
+      var sub1 = Meteor.subscribe("mart/storefront", insertedStoreId, function() {
+        let createdStorefront = Mart.Storefronts.findOne(storefrontId)
 
-      test.isNotUndefined(createdStorefront)
-      test.equal(createdStorefront.name, expectedStorefront.name)
-      test.equal(createdStorefront.description, expectedStorefront.description)
-      test.equal(createdStorefront.isPublished, expectedStorefront.isPublished)
-      test.equal(createdStorefront.userId, Meteor.userId())
+        test.isNotUndefined(createdStorefront)
+        test.equal(createdStorefront.name, "some Storefront")
+        test.equal(createdStorefront.description, "woot there it is")
+        test.isFalse(createdStorefront.isPublished)
+        test.isTrue(createdStorefront.userId === Meteor.userId() ||
+          createdStorefront.userId === "fakeId")
+        sub1.stop()
+        testLogout(test, onLoggedOut)
+      })
+    }
 
-      testLogout(test, onLoggedOut)
-    })
-  }
+    function onLoggedOut(error) {
+      var sub2 = Meteor.subscribe("mart/storefront", insertedStoreId, function() {
+        let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
+        test.isUndefined(createdStorefront)
 
-  function onLoggedOut(error) {
-    Meteor.subscribe("mart/storefront", insertedStoreId, function() {
-      let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
-      test.isUndefined(createdStorefront)
-
-      done()
-    })
-  }
-})
-
-Tinytest.addAsync('Storefronts - Publications - mart/storefront [Admin] can subscribe to all Storefronts', function(test, done) {
-  let expectedStorefront = {
-    name: "some Storefront",
-    description: "woot there it is",
-    isPublished: false,
-    isDeleted: true,
-  }
-  let insertedStoreId
-  let merchantId
-  testLogout(test, begin)
-
-  function begin() {
-    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, onUserLoggedIn)
-  }
-
-  function onUserLoggedIn(error, userId) {
-    merchantId = Meteor.userId()
-    Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
-  }
-
-  function onStorefrontInserted(error, storefrontId) {
-    test.isUndefined(error, "Could not insert a new Storefront")
-    test.isTrue(typeof storefrontId === "string")
-
-    insertedStoreId = storefrontId
-
-    Meteor.subscribe("mart/storefront", insertedStoreId, function() {
-      let createdStorefront = Mart.Storefronts.findOne(storefrontId)
-
-      test.isUndefined(createdStorefront)
-
-      testLogout(test, onLoggedOut)
-    })
-  }
-
-  function onLoggedOut(error) {
-    testLogin([Mart.ROLES.GLOBAL.ADMIN], test, onAdminLoggedIn)
-  }
-
-  function onAdminLoggedIn(error, adminId) {
-    Meteor.subscribe("mart/storefront", insertedStoreId, function() {
-      let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
-      test.isNotUndefined(createdStorefront)
-      test.equal(createdStorefront.name, expectedStorefront.name)
-      test.equal(createdStorefront.description, expectedStorefront.description)
-      test.equal(createdStorefront.isPublished, expectedStorefront.isPublished)
-      test.equal(createdStorefront.userId, merchantId)
-
-      done()
-    })
-  }
-})
-
-Tinytest.addAsync('Storefronts - Publications - mart/storefront [Rep] can subscribe to all their managed Storefronts', function(test, done) {
-  var expectedStorefront = {
-    name: "some Storefront",
-    description: "woot there it is",
-    isPublished: false,
-    userId: "testId"
-  }
-  var insertedStoreId
-  testLogout(test, begin)
-
-  function begin() {
-    testLogin([Mart.ROLES.GLOBAL.REP], test, onUserLoggedIn)
-  }
-
-  function onUserLoggedIn(error) {
-    Mart.Storefronts.insert(_.clone(expectedStorefront), onStorefrontInserted)
-  }
-
-  function onStorefrontInserted(error, storefrontId) {
-    test.isUndefined(error, "Could not insert a new Storefront")
-    test.isTrue(typeof storefrontId === "string")
-    insertedStoreId = storefrontId
-
-    Meteor.subscribe("mart/storefront", insertedStoreId, function() {
-      let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
-
-      test.isNotUndefined(createdStorefront)
-      test.equal(createdStorefront.name, expectedStorefront.name)
-      test.equal(createdStorefront.description, expectedStorefront.description)
-      test.equal(createdStorefront.isPublished, expectedStorefront.isPublished)
-      test.equal(createdStorefront.userId, expectedStorefront.userId)
-      test.equal(createdStorefront.repId, Meteor.userId())
-
-      testLogout(test, onLoggedOut)
-    })
-  }
-
-  function onLoggedOut(error) {
-    Meteor.subscribe("mart/storefront", insertedStoreId, function() {
-      let createdStorefront = Mart.Storefronts.findOne(insertedStoreId)
-      test.isUndefined(createdStorefront)
-
-      done()
-    })
-  }
+        sub2.stop()
+        done()
+      })
+    }
+  })
 })

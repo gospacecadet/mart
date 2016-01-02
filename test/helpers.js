@@ -93,6 +93,18 @@ createTestStorefront = function(storefront, test, callback) {
   })
 }
 
+quickStorefront = function(storefront, test, callback) {
+  testLogout(test, function() {
+    testLogin([Mart.ROLES.GLOBAL.MERCHANT], test, function() {
+      createTestStorefront(storefront, test, function(error, storefrontId) {
+        testLogout(test, function() {
+          callback(error, storefrontId)
+        })
+      })
+    })
+  })
+}
+
 createTestProduct = function(product, test, callback) {
   Mart.Products.insert(_.defaults(product, {
     name: "asd;skdf sdf",
