@@ -74,7 +74,7 @@ testLogout = function(test, callback) {
   });
 }
 
-// returns [storefrontId, merchantId]
+// returns storefrontId
 createTestStorefront = function(storefront, test, callback) {
   Mart.Storefronts.insert(_.defaults(storefront, {
     name: "some Storefront",
@@ -115,7 +115,37 @@ createTestProduct = function(product, test, callback) {
     testError(error, test, "Could not create test product")
     test.isTrue(typeof productId === "string")
 
-    callback(error, productId)
+    createTestPrices(productId, test, function(error, priceId) {
+      callback(error, productId)
+    })
+  })
+}
+
+createTestPrices = function(productId, test, callback) {
+  Mart.Prices.insert({
+    productId: productId,
+    unit: Mart.Product.UNITS.HOUR,
+    priceInCents: 10
+  }, function(error, priceId) {
+    testError(error, test)
+
+    Mart.Prices.insert({
+      productId: productId,
+      unit: Mart.Product.UNITS.DAY,
+      priceInCents: 100
+    }, function(error, priceId) {
+      testError(error, test)
+
+      Mart.Prices.insert({
+        productId: productId,
+        unit: Mart.Product.UNITS.MONTH,
+        priceInCents: 1000
+      }, function(error, priceId) {
+        testError(error, test)
+
+        callback(error, priceId)
+      })
+    })
   })
 }
 

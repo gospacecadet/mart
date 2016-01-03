@@ -73,6 +73,7 @@ Package.onUse(function(api) {
     "lib/payment_methods/cards/cards_server.js",
     'lib/products/products-publications.js',
     'lib/products/products-security.js',
+    'lib/prices/prices-security.js',
     'lib/gateways/gateways_server.js',
     "lib/gateways/stripe/stripe_server.js",
     'lib/line_items/line_items_server.js',
@@ -94,7 +95,7 @@ Package.onUse(function(api) {
     "lib/gateways/test/test_client.js",
     "lib/gateways/stripe/stripe_client.js",
     'lib/carts/carts_client.js',
-    'lib/bank-accounts/bank-accounts-client.js'
+    'lib/bank-accounts/bank-accounts-client.js',
   ], "client")
 
   api.imply([
@@ -127,7 +128,6 @@ Package.onTest(function(api) {
     'test/gateways/stripe-tests.js',
     'test/prices/prices-tests.js',
     'test/products/products-tests.js',
-    'test/line-items/line-item-tests.js',
     'test/bank-accounts/bank-accounts-tests.js'
   ]);
 
@@ -144,5 +144,6 @@ Package.onTest(function(api) {
     'test/products/products-security-tests.js',
     'test/carts/guest-cart-settled-test.js',
     'test/carts/cart-settled-test.js',
+    'test/line-items/line-item-tests.js',
   ], "client");
 });
