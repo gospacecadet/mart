@@ -24,8 +24,6 @@ Tinytest.addAsync('LineItems - can be created by Shoppers & Guests', function(te
   }
 
   function doShopperTest() {
-    console.log(productId);
-    console.log(storefrontId);
     Mart.LineItems.insert({
       productId: productId,
       quantity: 20,

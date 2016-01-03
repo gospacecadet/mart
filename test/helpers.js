@@ -76,6 +76,8 @@ testLogout = function(test, callback) {
 
 // returns storefrontId
 createTestStorefront = function(storefront, test, callback) {
+  // console.log('createTestStorefront');
+
   Mart.Storefronts.insert(_.defaults(storefront, {
     name: "some Storefront",
     description: "woot there it is",
@@ -86,9 +88,10 @@ createTestStorefront = function(storefront, test, callback) {
     isPublished: true,
     isDeleted: false
   }), function(error, storefrontId) {
+    // console.log(error);
+    // console.log(storefrontId);
     testError(error, test, "Could not create test storefront")
     test.isTrue(typeof storefrontId === "string")
-
     callback(error, storefrontId)
   })
 }
@@ -106,12 +109,15 @@ quickStorefront = function(storefront, test, callback) {
 }
 
 createTestProduct = function(product, test, callback) {
+  // console.log('createTestProduct');
   Mart.Products.insert(_.defaults(product, {
     name: "asd;skdf sdf",
     description: "a;sldfjkas;dlf",
     isPublished: true,
     isDeleted: false
   }), function(error, productId) {
+    // console.log(error);
+    // console.log(productId);
     testError(error, test, "Could not create test product")
     test.isTrue(typeof productId === "string")
 
@@ -122,24 +128,26 @@ createTestProduct = function(product, test, callback) {
 }
 
 createTestPrices = function(productId, test, callback) {
+  // console.log('createTestPrices');
+
   Mart.Prices.insert({
     productId: productId,
     unit: Mart.Product.UNITS.HOUR,
-    priceInCents: 10
+    priceInCents: 10000
   }, function(error, priceId) {
     testError(error, test)
 
     Mart.Prices.insert({
       productId: productId,
       unit: Mart.Product.UNITS.DAY,
-      priceInCents: 100
+      priceInCents: 20000
     }, function(error, priceId) {
       testError(error, test)
 
       Mart.Prices.insert({
         productId: productId,
         unit: Mart.Product.UNITS.MONTH,
-        priceInCents: 1000
+        priceInCents: 30000
       }, function(error, priceId) {
         testError(error, test)
 
