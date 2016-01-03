@@ -50,6 +50,7 @@ Package.onUse(function(api) {
 
   api.add_files([
     "lib/mart.js",
+    'lib/errors.js',
     'lib/accounts/accounts.js',
     'lib/security-helpers.js',
     'lib/storefronts/storefronts.js',
@@ -86,6 +87,8 @@ Package.onUse(function(api) {
     'lib/carts/carts-methods.js',
     'lib/images/images-publications.js',
     'lib/images/images-security.js',
+    'lib/storefronts/server/storefronts-methods.js',
+    'lib/products/products-methods.js'
   ], "server")
 
   api.add_files([
