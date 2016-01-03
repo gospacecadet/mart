@@ -88,7 +88,8 @@ Package.onUse(function(api) {
     'lib/images/images-publications.js',
     'lib/images/images-security.js',
     'lib/storefronts/server/storefronts-methods.js',
-    'lib/products/products-methods.js'
+    'lib/products/products-methods.js',
+    'lib/prices/prices-publications.js'
   ], "server")
 
   api.add_files([
