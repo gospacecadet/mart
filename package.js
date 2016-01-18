@@ -35,10 +35,10 @@ Package.onUse(function(api) {
   // Community packages
   api.use([
     'mrgalaxy:stripe@2.2.0',
-    'aldeed:collection2@2.5.0',
-    'aldeed:simple-schema@1.4.0',
+    'aldeed:collection2@2.8.0',
+    'aldeed:simple-schema@1.5.3',
     'ongoworks:security@1.3.0',
-    'momentjs:moment@2.10.6',
+    'momentjs:moment@2.11.1',
     'alanning:roles@1.2.14',
     'marvin:machina@0.1.2',
     'matb33:collection-hooks@0.8.1',
