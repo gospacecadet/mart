@@ -40,8 +40,8 @@ Package.onUse(function(api) {
     'ongoworks:security@1.3.0',
     'momentjs:moment@2.10.6',
     'alanning:roles@1.2.14',
-    'marvin:machina@0.1.2'
-    // 'matb33:collection-hooks@0.7.5',
+    'marvin:machina@0.1.2',
+    'matb33:collection-hooks@0.8.1',
   ]);
 
   api.use([
