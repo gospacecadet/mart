@@ -87,6 +87,7 @@ Package.onUse(function(api) {
     'lib/carts/carts-methods.js',
     'lib/images/images-publications.js',
     'lib/images/images-security.js',
+    'lib/images/images-methods.js',
     'lib/storefronts/server/storefronts-methods.js',
     'lib/products/products-methods.js',
     'lib/prices/prices-publications.js'
