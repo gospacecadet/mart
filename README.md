@@ -1,6 +1,6 @@
 Mart
 ====
-
+// stuck http://stackoverflow.com/questions/33964967/canvas-toblob-is-not-recognized-as-a-function-in-chrome-or-ie
 Meteor based platform that creates marketplaces where shoppers can buy from multiple vendors.
 
 Installation
