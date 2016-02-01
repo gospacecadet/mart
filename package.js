@@ -49,12 +49,18 @@ Package.onUse(function(api) {
   ], 'client')
 
   api.add_files([
-    "lib/mart.js",
+    'lib/mart.js',
+  ])
+
+  api.add_files([
+    'lib/subscriptions/subscription.js',
+  ])
+
+  api.add_files([
     'lib/errors.js',
     'lib/accounts/accounts.js',
     'lib/security-helpers.js',
     'lib/products/products.js',
-
     'lib/storefronts/storefronts.js',
     "lib/images/images.js",
     'lib/gateways/gateways.js',
@@ -64,6 +70,7 @@ Package.onUse(function(api) {
     'lib/prices/prices.js',
     'lib/line_items/line_items.js',
     'lib/bank-accounts/bank-accounts.js',
+    'lib/subscriptions/subscriptions.js',
     'lib/carts/carts.js',
   ])
 
