@@ -57,6 +57,10 @@ Package.onUse(function(api) {
   ])
 
   api.add_files([
+    'lib/subscriptions/subscriptions-methods.js',
+  ], 'server')
+
+  api.add_files([
     'lib/errors.js',
     'lib/accounts/accounts.js',
     'lib/security-helpers.js',
