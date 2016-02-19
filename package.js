@@ -42,6 +42,7 @@ Package.onUse(function(api) {
     'alanning:roles@1.2.14',
     'marvin:machina@0.1.2',
     'matb33:collection-hooks@0.8.1',
+    'lfergon:exportcsv@0.0.8'
   ]);
 
   api.use([
@@ -104,7 +105,8 @@ Package.onUse(function(api) {
     'lib/images/images-methods.js',
     'lib/storefronts/server/storefronts-methods.js',
     'lib/products/products-methods.js',
-    'lib/prices/prices-publications.js'
+    'lib/prices/prices-publications.js',
+    'lib/carts/reports.js'
   ], "server")
 
   api.add_files([
