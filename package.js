@@ -78,6 +78,8 @@ Package.onUse(function(api) {
     'lib/bank-accounts/bank-accounts.js',
     'lib/subscriptions/subscriptions.js',
     'lib/carts/carts.js',
+    'lib/deposits/deposit.js',
+    'lib/deposits/deposits.js',
   ])
 
   api.add_files([
@@ -95,7 +97,6 @@ Package.onUse(function(api) {
     'lib/line_items/line_items_server.js',
     'lib/carts/carts-publications.js',
     'lib/carts/carts-security.js',
-    'lib/carts/carts-machina.js',
     'lib/bank-accounts/bank-accounts-server.js',
     'lib/gateways/stripe/stripe-customers.js',
     'lib/gateways/stripe/stripe-managed-accounts.js',
@@ -106,7 +107,11 @@ Package.onUse(function(api) {
     'lib/storefronts/server/storefronts-methods.js',
     'lib/products/products-methods.js',
     'lib/prices/prices-publications.js',
-    'lib/carts/reports.js'
+    'lib/carts/reports.js',
+    'lib/deposits/deposits-methods.js',
+    'lib/deposits/deposits-publications.js',
+    'lib/carts/carts-machina.js',
+
   ], "server")
 
   api.add_files([
